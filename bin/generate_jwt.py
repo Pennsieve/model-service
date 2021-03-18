@@ -58,4 +58,4 @@ if __name__ == "__main__":
     )
     token = claim.encode(JwtConfig(args.jwt_key))
 
-    print(token.decode())  # convert bytes -> string
+    print(token)
