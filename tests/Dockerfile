@@ -16,9 +16,7 @@ COPY conftest.py ./conftest.py
 COPY openapi     ./openapi
 COPY publish     ./publish
 COPY generator   ./generator
-COPY migrate     ./migrate
 COPY utils       ./utils
-COPY loader      ./loader
 COPY core        ./core
 COPY server      ./server
 COPY tests       ./tests
