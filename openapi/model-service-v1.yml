@@ -9,17 +9,18 @@ servers:
   - url: https://api.pennsieve.net/models/v1
 
 tags:
-  - name: Concepts
-  - name: Query
-  - name: Proxy
+  - name: Models
+  - name: Records
   - name: Relationships
-
+  - name: Proxies
+  - name: Queries
+  
 paths:
   '/datasets/{datasetId}/concepts':
     get:
       tags:
-        - Concepts
-      summary: Returns a list of all Concepts for an dataset
+        - Models
+      summary: Returns a list of all Models for an dataset
       operationId: server.api.v1.concepts.get_all_concepts
       parameters:
         - name: datasetId
@@ -41,7 +42,7 @@ paths:
         - Bearer: []
     post:
       tags:
-        - Concepts
+        - Models
       summary: Returns the Concept that was created
       description: ""
       operationId: server.api.v1.concepts.create_concept
@@ -72,7 +73,7 @@ paths:
   '/datasets/{datasetId}/concepts/{conceptIdOrName}':
     get:
       tags:
-        - Concepts
+        - Models
       summary: Returns a Concept by id for an dataset
       description: "Returns a Concept by id for an dataset"
       operationId: server.api.v1.concepts.get_concept
@@ -100,7 +101,7 @@ paths:
         - Bearer: []
     put:
       tags:
-        - Concepts
+        - Models
       summary: Returns the Concept that was updated
       description: "Returns the Concept that was updated"
       operationId: server.api.v1.concepts.update_concept
@@ -136,7 +137,7 @@ paths:
 
     delete:
       tags:
-        - Concepts
+        - Models
       summary: Delete a concept by ID
       description: "Delete a concept by ID"
       operationId: server.api.v1.concepts.delete_concept
@@ -166,7 +167,7 @@ paths:
   "/datasets/{datasetId}/concepts/{conceptIdOrName}/properties":
     get:
       tags:
-        - Concepts
+        - Models
       summary: Get all the properties for a concept
       description: "Get all the properties for a concep"
       operationId: server.api.v1.concepts.get_all_properties
@@ -196,7 +197,7 @@ paths:
         - Bearer: []
     put:
       tags:
-        - Concepts
+        - Models
       summary: Update or create properties for the concept
       description: "Update or create properties for the concept"
       operationId: server.api.v1.concepts.update_properties
@@ -238,7 +239,7 @@ paths:
   "/datasets/{datasetId}/concepts/{conceptIdOrName}/properties/{propertyId}":
     delete:
       tags:
-        - Concepts
+        - Models
       summary: Delete a property
       description: "Delete a property"
       operationId: server.api.v1.concepts.delete_property
@@ -271,7 +272,7 @@ paths:
   "/datasets/{datasetId}/concepts/{conceptIdOrName}/instances":
     get:
       tags:
-        - Concepts
+        - Records
       summary: Get all Concept Instance with the given concept ID
       description: "Get all Concept Instance with the given concept ID"
       operationId: server.api.v1.concept_instances.get_all_concept_instances
@@ -334,7 +335,7 @@ paths:
         - Bearer: []
     post:
       tags:
-        - Concepts
+        - Models
       summary: Returns the Concept Instance that was created
       description: "Returns the Concept Instance that was created"
       operationId: server.api.v1.concept_instances.create_concept_instance
@@ -374,7 +375,7 @@ paths:
         - Bearer: []
     delete:
       tags:
-        - Concepts
+        - Models
       summary: Deletes the Concept Instances with the given concept id and instance ids
       description: ""
       operationId: server.api.v1.concept_instances.delete_concept_instances
@@ -413,7 +414,7 @@ paths:
   "/datasets/{datasetId}/concepts/{conceptIdOrName}/instances/{conceptInstanceId}":
     get:
       tags:
-        - Concepts
+        - Records
       summary: Get the Concept Instance with the given concept ID and instance ID
       description: "Get the Concept Instance with the given concept ID and instance ID"
       operationId: server.api.v1.concept_instances.get_concept_instance
@@ -447,7 +448,7 @@ paths:
         - Bearer: []
     put:
       tags:
-        - Concepts
+        - Models
       summary: Updates the Concept Instance with the given concept ID, instance ID and values
       description: "Updates the Concept Instance with the given concept ID, instance ID and values"
       operationId: server.api.v1.concept_instances.update_concept_instance
@@ -486,7 +487,7 @@ paths:
         - Bearer: []
     delete:
       tags:
-        - Concepts
+        - Models
       summary: Deletes the Concept Instance with the given concept ID and instance ID
       description: "Deletes the Concept Instance with the given concept ID and instance ID"
       operationId: server.api.v1.concept_instances.delete_concept_instance
@@ -522,7 +523,7 @@ paths:
   # "/datasets/{datasetId}/concepts/{id}/relationshipCount":
   #   get:
   #     tags:
-  #       - Concepts
+  #       - Models
   #     summary: Returns the number of relationships associated with a Concept Id
   #     description: ""
   #     operationId: getRelationshipCount
@@ -553,7 +554,7 @@ paths:
   "/datasets/{datasetId}/concepts/linked/properties":
     get:
       tags:
-        - Concepts
+        - Models
       summary: Returns a list of all linked properties for a dataset
       description: "Returns a list of all linked properties for a dataset"
       operationId: server.api.v1.linked_properties.get_all_schema_linked_properties
@@ -579,10 +580,10 @@ paths:
   "/datasets/{datasetId}/concepts/schema/graph":
     get:
       tags:
-        - Concepts
-      summary: Returns a list of all Concepts, Linked Properties and
+        - Models
+      summary: Returns a list of all Models, Linked Properties and
         SchemaRelationships for a dataset
-      description: "Returns a list of all Concepts, Linked Properties and SchemaRelationships for a dataset"
+      description: "Returns a list of all Models, Linked Properties and SchemaRelationships for a dataset"
       operationId: server.api.v1.concepts.get_schema_graph
       parameters:
         - name: datasetId
@@ -606,7 +607,7 @@ paths:
   "/datasets/{datasetId}/concepts/{id}/linked":
     get:
       tags:
-        - Concepts
+        - Models
       summary: "Gets all schema linked properties attached to the concept"
       description: "Gets all schema linked properties attached to the concept"
       operationId: server.api.v1.linked_properties.get_schema_linked_properties
@@ -636,7 +637,7 @@ paths:
         - Bearer: []
     post:
       tags:
-        - Concepts
+        - Models
       summary: "Returns the schema linked property that was created"
       description: "Returns the schema linked property that was created"
       operationId: server.api.v1.linked_properties.create_schema_linked_property
@@ -673,7 +674,7 @@ paths:
   "/datasets/{datasetId}/concepts/{id}/linked/bulk":
     post:
       tags:
-        - Concepts
+        - Models
       summary: "Returns the schema linked properties that were created"
       description: "Returns the schema linked properties that were created"
       operationId: server.api.v1.linked_properties.create_schema_linked_properties
@@ -714,7 +715,7 @@ paths:
   "/datasets/{datasetId}/concepts/{id}/linked/{linkId}":
     put:
       tags:
-        - Concepts
+        - Models
       summary: "Returns the schema linked property that was created"
       description: "Returns the schema linked property that was created"
       operationId: server.api.v1.linked_properties.update_schema_linked_property
@@ -755,7 +756,7 @@ paths:
         - Bearer: []
     delete:
       tags:
-        - Concepts
+        - Models
       summary: "Deletes a schema linked property by its ID"
       description: "Deletes a schema linked property by its ID"
       operationId: server.api.v1.linked_properties.delete_schema_linked_property
@@ -791,7 +792,7 @@ paths:
   "/datasets/{datasetId}/concepts/{idOrName}/related":
     get:
       tags:
-        - Concepts
+        - Models
       summary: Returns a related concepts
       description: "Returns a related concepts"
       operationId: server.api.v1.concepts.get_related_concepts
@@ -823,7 +824,7 @@ paths:
   "/datasets/{datasetId}/concepts/graph/summary":
     get:
       tags:
-        - Concepts
+        - Models
       summary: Get summary metrics for a graph
       description: "Get summary metrics for a graph"
       operationId: server.api.v1.concepts.get_graph_summary
@@ -847,9 +848,9 @@ paths:
   "/datasets/{datasetId}/concepts/{id}/topology":
     get:
       tags:
-        - Concepts
-      summary: Get all SchemaRelationships and the Concepts they point to
-      description: "Get all SchemaRelationships and the Concepts they point to"
+        - Models
+      summary: Get all SchemaRelationships and the Models they point to
+      description: "Get all SchemaRelationships and the Models they point to"
       operationId: server.api.v1.concepts.get_topology
       parameters:
         - name: id
@@ -879,7 +880,7 @@ paths:
   # "/datasets/{datasetId}/concepts/{conceptId}/instances/{id}/relations":
   #   put:
   #     tags:
-  #       - Concepts
+  #       - Models
   #     summary: Update all relations of a certain type with the given relationship type
   #     description: ""
   #     operationId: updateRelations
@@ -925,7 +926,7 @@ paths:
   "/datasets/{datasetId}/concepts/{conceptId}/instances/{id}/relations/{targetConceptIdOrName}":
     get:
       tags:
-        - Concepts
+        - Records
       summary: Get the concept instances of type ConceptId related to some particular instance, and the relationship
       description: "Get the concept instances of type ConceptId related to some particular instance, and the relationship"
       operationId: server.api.v1.concepts.get_related
@@ -1016,7 +1017,7 @@ paths:
   "/datasets/{datasetId}/concepts/{conceptId}/instances/{id}/files-paged":
     get:
       tags:
-        - Concepts
+        - Records
       summary: Get the package related to some particular instance, and the relationship
       description: ""
       operationId: server.api.v1.concepts.get_files_paged
@@ -1086,7 +1087,7 @@ paths:
   "/datasets/{datasetId}/concepts/{conceptId}/instances/{id}/files":
     get:
       tags:
-        - Concepts
+        - Records
       summary: Get the package related to some particular instance, and the relationship
       description: ""
       operationId: server.api.v1.concepts.get_files
@@ -1158,9 +1159,9 @@ paths:
   "/datasets/{datasetId}/concepts/{conceptIdOrName}/instances/batch":
     post:
       tags:
-        - Concepts
-      summary: Returns a stream of Concepts instances that were created
-      description: "Returns a stream of Concepts instances that were created"
+        - Records
+      summary: Returns a stream of Models instances that were created
+      description: "Returns a stream of Models instances that were created"
       operationId:  server.api.v1.concept_instances.create_concept_instance_batch
       parameters:
         - name: X-Bf-Trace-Id
@@ -1204,7 +1205,7 @@ paths:
   "/datasets/{datasetId}/concepts/{conceptIdOrName}/instances/{id}/relationCounts":
     get:
       tags:
-        - Concepts
+        - Records
       summary: Get the Concept Instance with the given concept id and instance id
       description: ""
       operationId:  server.api.v1.concept_instances.get_concept_instance_relationship_counts
@@ -1249,7 +1250,7 @@ paths:
   "/datasets/{datasetId}/concepts/{conceptId}/instances/{id}/linked":
     get:
       tags:
-        - Concepts
+        - Records
       summary: "Gets the linked properties attached to the record with the given concept and record ID"
       description: "Gets the linked properties attached to the record with the given concept and record ID"
       operationId: server.api.v1.linked_properties.get_linked_properties
@@ -1285,7 +1286,7 @@ paths:
         - Bearer: []
     post:
       tags:
-        - Concepts
+        - Models
       summary: Attaches a linked property to the record specified by the given concept
         ID and record ID
       description: ""
@@ -1329,7 +1330,7 @@ paths:
   "/datasets/{datasetId}/concepts/{conceptId}/instances/{id}/linked/batch":
     post:
       tags:
-        - Concepts
+        - Records
       summary: Attaches multiple linked properties to the record specified by the given concept
         ID and record ID
       description: ""
@@ -1373,7 +1374,7 @@ paths:
   "/datasets/{datasetId}/concepts/{conceptId}/instances/{id}/linked/{linkId}":
     delete:
       tags:
-        - Concepts
+        - Records
       summary: "Deletes the linked properties attached to the record with the given
         concept and record ID"
       description: "Deletes the linked properties attached to the record with the given"
@@ -1416,7 +1417,7 @@ paths:
   "/datasets/{datasetId}/query/run":
     post:
       tags:
-        - Query
+        - Queries
       summary: Execute the given graph query and return the response
       description: "Execute the given graph query and return the response"
       operationId: server.api.v1.query.run
@@ -1631,7 +1632,7 @@ paths:
   "/datasets/{datasetId}/proxy/{proxyType}/instances":
     get:
       tags:
-        - Proxy
+        - Proxies
       summary: Returns a list of all Proxy Instances for a proxy type
       description: ""
       operationId: server.api.v1.proxies.get_all_proxy_instances
@@ -1665,7 +1666,7 @@ paths:
         - Bearer: []
     post:
       tags:
-        - Proxy
+        - Proxies
       summary: Returns the Proxy Concept Instance and Relationship Instance that were
         created
       description: ""
@@ -1709,7 +1710,7 @@ paths:
   "/datasets/{datasetId}/proxy/{proxyType}":
     get:
       tags:
-        - Proxy
+        - Proxies
       summary: Returns the Proxy Concept of the request proxy type
       description: ""
       operationId: server.api.v1.proxies.get_proxy_concept
@@ -1739,7 +1740,7 @@ paths:
   "/datasets/{datasetId}/proxy/{proxyType}/instances/{id}":
     get:
       tags:
-        - Proxy
+        - Proxies
       summary: Returns a Proxy Instance by id for an dataset
       description: ""
       operationId: server.api.v1.proxies.get_proxy_instance
@@ -1775,7 +1776,7 @@ paths:
 
     delete:
       tags:
-        - Proxy
+        - Proxies
       summary: Deletes the Proxy Instance with the given id
       description: ""
       operationId: server.api.v1.proxies.delete_proxy_instance
@@ -1848,7 +1849,7 @@ paths:
   "/datasets/{datasetId}/proxy/{proxyType}/external/{nodeId}/relationCounts":
     get:
       tags:
-        - Proxy
+        - Proxies
       summary: Returns the types of relationships that exist and their counts
       description: ""
       operationId: server.api.v1.proxies.get_proxy_relationship_counts
@@ -1886,7 +1887,7 @@ paths:
   # "/datasets/{datasetId}/proxy/{proxyType}/external/{id}/relations/{conceptIdOrName}":
   #   get:
   #     tags:
-  #       - Proxy
+  #       - Proxies
   #     summary: Get the concept instances of type ConceptId related to some particular
   #       instance, and the relationship
   #     description: ""
@@ -1964,7 +1965,7 @@ paths:
   "/datasets/{datasetId}/proxy/{proxyType}/external/{packageId}/relations/{conceptIdOrName}/files":
     get:
       tags:
-        - Proxy
+        - Proxies
       summary: "Get records related to this proxy package"
       description: "Get records related to this proxy package"
       operationId: server.api.v1.proxies.get_records_related_to_package
@@ -2051,7 +2052,7 @@ paths:
   # "/datasets/{datasetId}/proxy/{proxyType}/external/{id}/files":
   #   get:
   #     tags:
-  #       - Proxy
+  #       - Proxies
   #     summary: Get the packages related to some particular proxy by it's external id
   #       and the relationship
   #     description: ""
