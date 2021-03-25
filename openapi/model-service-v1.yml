@@ -3531,8 +3531,8 @@ components:
 
     APropertyDataType:
       oneOf:
-        - $ref: "./model-service-v2.yml#/components/schemas/SimpleDataType"
-        - $ref: "./model-service-v2.yml#/components/schemas/ComplexDataType"
+        - $ref: "openapi/model-service-v2.yml#/components/schemas/SimpleDataType"
+        - $ref: "openapi/model-service-v2.yml#/components/schemas/ComplexDataType"
 
     ConceptInstance:
       type: object
