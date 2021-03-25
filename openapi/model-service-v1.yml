@@ -2600,6 +2600,12 @@ components:
         - type: object
           nullable: true
 
+    SimpleDataType:
+      type: string
+
+    ComplexDataType:
+      type: object
+
     BulkConceptInstanceRelationPayload:
       type: object
       required:
@@ -3531,8 +3537,8 @@ components:
 
     APropertyDataType:
       oneOf:
-        - $ref: "/openapi/model-service-v2.yml#/components/schemas/SimpleDataType"
-        - $ref: "/openapi/model-service-v2.yml#/components/schemas/ComplexDataType"
+        - $ref: '#/components/schemas/SimpleDataType'
+        - $ref: '#/components/schemas/ComplexDataType'
 
     ConceptInstance:
       type: object
