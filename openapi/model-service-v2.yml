@@ -1549,6 +1549,45 @@ paths:
         - Bearer: []
 
 
+# =Davy=:
+  '/organizations/{organizationId}/autocomplete/models/filter/{modelName}':
+    get:
+      tags:
+        - Search
+      summary: 'Gets datasets containing the model denoted by ID'
+      description: 'Gets datasets containing the model denoted by ID'
+      operationId: server.api.v2.search.filtered_datasets_by_model
+      parameters:
+        - name: X-Bf-Trace-Id
+          in: header
+          schema:
+            type: string
+          required: true
+        - name: organizationId
+          in: path
+          description: Organization ID
+          required: true
+          schema:
+            $ref: '#/components/schemas/OrganizationIdentifier'
+        - name: modelName
+          in: path
+          description: Model ID or name
+          required: true
+          schema:
+            $ref: '#/components/schemas/ModelIdentifier'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                # We can define a schema that describes the structure of the json
+                #type:
+                #or we can point directly to the schema description
+                $ref: '#/components/schemas/AutocompleteDataset'
+      security:
+        - Bearer: []
+
 components:
   securitySchemes:
     Bearer:
@@ -2128,3 +2167,20 @@ components:
       properties:
         content:
           type: object
+
+    # =Davy=:
+    AutocompleteDataset:
+      type: object
+      #the tags of the json
+      required:
+        - datasets
+        - count
+      properties:
+        datasets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Dataset'
+        count:
+          type: integer
+          format: int32
+

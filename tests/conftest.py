@@ -104,6 +104,11 @@ def other_valid_dataset() -> Tuple[DatasetId, str]:
     return (DatasetId(2), "N:dataset:C-D")
 
 
+# =Davy=:
+@pytest.fixture(scope="session")
+def another_valid_dataset() -> Tuple[DatasetId, str]:
+    return (DatasetId(3), "N:dataset:D-E")
+
 @pytest.fixture(scope="session")
 def valid_user():
     return (12345, "N:user:U-S-E-R")
@@ -389,11 +394,13 @@ def configure_delete(
 
 @pytest.fixture(scope="function")
 def authorized_user_token(
-    config, valid_organization, valid_dataset, other_valid_dataset, valid_user
+    config, valid_organization, valid_dataset, other_valid_dataset, another_valid_dataset, valid_user
 ):
     organization_id, organization_node_id = valid_organization
     dataset_id_1, dataset_node_id_1 = valid_dataset
     dataset_id_2, dataset_node_id_2 = other_valid_dataset
+# =Davy=:
+    dataset_id_3, dataset_node_id_3 = another_valid_dataset
 
     user_id, user_node_id = valid_user
     data = UserClaim(
@@ -415,6 +422,12 @@ def authorized_user_token(
                 role=RoleType.OWNER,
                 locked=False,
             ),
+            DatasetRole(
+                id=dataset_id_3,
+                node_id=dataset_node_id_3,
+                role=RoleType.OWNER,
+                locked=False,
+            ),
         ],
     )
     claim = Claim.from_claim_type(data, seconds=JWT_EXPIRATION_SECS)
@@ -423,11 +436,13 @@ def authorized_user_token(
 
 @pytest.fixture(scope="function")
 def authorized_service_token(
-    config, valid_organization, valid_dataset, other_valid_dataset
+    config, valid_organization, valid_dataset, other_valid_dataset, another_valid_dataset
 ):
+# =Davy=:
     organization_id, organization_node_id = valid_organization
     dataset_id_1, dataset_node_id_1 = valid_dataset
     dataset_id_2, dataset_node_id_2 = other_valid_dataset
+    dataset_id_3, dataset_node_id_3 = another_valid_dataset
 
     data = ServiceClaim(
         roles=[
@@ -443,6 +458,12 @@ def authorized_service_token(
             DatasetRole(
                 id=dataset_id_2,
                 node_id=dataset_node_id_2,
+                role=RoleType.OWNER,
+                locked=False,
+            ),
+            DatasetRole(
+                id=dataset_id_3,
+                node_id=dataset_node_id_3,
                 role=RoleType.OWNER,
                 locked=False,
             ),
