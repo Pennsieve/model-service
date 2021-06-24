@@ -1548,8 +1548,6 @@ paths:
       security:
         - Bearer: []
 
-
-# =Davy=:
   '/organizations/{organizationId}/autocomplete/models/filter/{modelName}':
     get:
       tags:
@@ -1581,9 +1579,6 @@ paths:
           content:
             application/json:
               schema:
-                # We can define a schema that describes the structure of the json
-                #type:
-                #or we can point directly to the schema description
                 $ref: '#/components/schemas/AutocompleteDataset'
       security:
         - Bearer: []
@@ -2168,10 +2163,8 @@ components:
         content:
           type: object
 
-    # =Davy=:
     AutocompleteDataset:
       type: object
-      #the tags of the json
       required:
         - datasets
         - count

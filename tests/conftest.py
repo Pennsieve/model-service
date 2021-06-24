@@ -98,13 +98,10 @@ def invalid_organization() -> Tuple[OrganizationId, str]:
 def valid_dataset() -> Tuple[DatasetId, str]:
     return (DatasetId(1), "N:dataset:A-B")
 
-
 @pytest.fixture(scope="session")
 def other_valid_dataset() -> Tuple[DatasetId, str]:
     return (DatasetId(2), "N:dataset:C-D")
 
-
-# =Davy=:
 @pytest.fixture(scope="session")
 def another_valid_dataset() -> Tuple[DatasetId, str]:
     return (DatasetId(3), "N:dataset:D-E")
@@ -399,7 +396,6 @@ def authorized_user_token(
     organization_id, organization_node_id = valid_organization
     dataset_id_1, dataset_node_id_1 = valid_dataset
     dataset_id_2, dataset_node_id_2 = other_valid_dataset
-# =Davy=:
     dataset_id_3, dataset_node_id_3 = another_valid_dataset
 
     user_id, user_node_id = valid_user
@@ -438,7 +434,6 @@ def authorized_user_token(
 def authorized_service_token(
     config, valid_organization, valid_dataset, other_valid_dataset, another_valid_dataset
 ):
-# =Davy=:
     organization_id, organization_node_id = valid_organization
     dataset_id_1, dataset_node_id_1 = valid_dataset
     dataset_id_2, dataset_node_id_2 = other_valid_dataset

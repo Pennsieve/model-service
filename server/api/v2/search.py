@@ -468,26 +468,19 @@ def autocomplete_model_property_values(
     ]
 
 def filtered_datasets_by_model(
-        organization_id: int,#organization the user belongs to
-        token_info: Claim,#user's token
+        organization_id: int,
+        token_info: Claim,
         model_name: str,
-        ) -> JsonDict:#list of datasets containing the model searched for
+        ) -> JsonDict:
 
     x_bf_trace_id = AuditLogger.trace_id_header()
 
     db = authorize_search(organization_id, x_bf_trace_id, token_info)
 
-    #print(f"Search for model in set of datasets:{model_name}")
     datasets = db.get_dataset_id_by_model_name(model_name)
-    # Write to the audit log:
+
     AuditLogger.get().message().append("organization", organization_id).append(
         "datasets", *[str(ds.id) for ds in datasets]
     ).log(x_bf_trace_id)
 
-    #this has to be of the same schema as defined in model-service-v2.yml...
     return {"datasets": [dataset.to_dict() for dataset in datasets], "count": len(datasets)}
-
-
-# =Davy=:
-#     call db/search get_dataset_id_by_model_name
-#     fill the front end by modifying model-service-v2.yml by adding a section in yaml

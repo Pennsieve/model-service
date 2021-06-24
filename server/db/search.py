@@ -892,7 +892,6 @@ class SearchDatabase(Transactional):
             model_name:str,
     ) -> List[DatasetId]:
 
-        #equivalent to: MATCH (n:Dataset)<-[:`@IN_DATASET`]-(node:Model {name:"patient"}) RETURN n
         cql = f"""
             MATCH ({labels.model("m")})-[{labels.in_dataset()}]->({labels.dataset("d")})
             WHERE m.name = $model_name
@@ -903,7 +902,6 @@ class SearchDatabase(Transactional):
         log.debug(cql)
         log.debug(kwargs)
 
-        #records transfer that into an immutable that can be searched
         results = tx.run(cql, kwargs).records()
 
         return [
@@ -921,16 +919,8 @@ class SearchDatabase(Transactional):
         :param model_name:
         :return: list of datasets containing the model
         """
-        print(f"Search datasets with models {model_name}")
         with self.transaction() as tx:
             return self._get_dataset_id_by_model_name(tx, model_name)
-# =Davy=:
-#     initialise transaction with tx
-#     run query with _get_dataset_id_by_model_name
-#     format the results by matching against the datasetIDs in the self.datasets [datasetDTO] which also contain the names of the dataset
-#     creating a dict
-#
-#     called from v2/search filtered_datasets_by_model
 
 
 @dataclass

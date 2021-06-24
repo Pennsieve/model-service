@@ -3909,7 +3909,6 @@ def test_autocomplete_property_deduplication(
     assert audit_logger.enhance.called
     assert audit_logger.enhance.call_count == 3
 
-# =Davy=:
 def test_autocomplete_filtered_search(
         client,
         auth_headers,
@@ -3920,10 +3919,6 @@ def test_autocomplete_filtered_search(
         another_valid_dataset,
         model_configure,
         api_client,
-        # create_property,
-        # create_record,
-        #create a full DB for the function
-        #movie_db,
 ):
     """
     Test: given a query started by the user, only select the datasets that have nodes labeled with the model searched
@@ -3934,7 +3929,6 @@ def test_autocomplete_filtered_search(
     other_dataset_id, other_dataset_node_id = other_valid_dataset
     another_dataset_id, another_dataset_node_id = another_valid_dataset
 
-    #add a list of dataset in the mockAPI
     api_client.get_datasets_response = [
         api.Dataset(dataset_node_id, dataset_id.id, "Foo"),
         api.Dataset(other_dataset_node_id, other_dataset_id.id, "Bar"),
@@ -3954,7 +3948,6 @@ def test_autocomplete_filtered_search(
     results = r.json
     assert results["count"] == 2 and len(results["datasets"])==2, "I was expecting 2 datasets with patient."
 
-# =Davy=:
 def test_autocomplete_filtered_empty_search(
         client,
         auth_headers,
@@ -3975,7 +3968,6 @@ def test_autocomplete_filtered_empty_search(
     other_dataset_id, other_dataset_node_id = other_valid_dataset
     another_dataset_id, another_dataset_node_id = another_valid_dataset
 
-    #add a list of dataset in the mockAPI
     api_client.get_datasets_response = [
         api.Dataset(dataset_node_id, dataset_id.id, "Foo"),
         api.Dataset(other_dataset_node_id, other_dataset_id.id, "Bar"),
@@ -3995,7 +3987,6 @@ def test_autocomplete_filtered_empty_search(
     results = r.json
     assert results["count"] == 0 and len(results["datasets"])==0, "I was expecting 0 datasets retrieved with the model toto"
 
-# =Davy=:
 def test_autocomplete_filtered_search_with_no_dataset(
         client,
         auth_headers,
@@ -4018,4 +4009,4 @@ def test_autocomplete_filtered_search_with_no_dataset(
     assert r.status_code == 200
 
     results = r.json
-    assert results["count"] == 0 and len(results["datasets"])==0, "I was expecting 0 datasets retrieved with the model toto"
+    assert results["count"] == 0 and len(results["datasets"]) == 0, "I was expecting 0 datasets retrieved with the model toto"
