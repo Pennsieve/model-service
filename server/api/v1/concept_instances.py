@@ -6,9 +6,9 @@ from werkzeug.exceptions import BadRequest, NotFound
 
 from core.clients import (
     AuditLogger,
-    PennsieveJobsClient,
     CreateRecord,
     DeleteRecord,
+    PennsieveJobsClient,
     TraceId,
     UpdateRecord,
 )

@@ -98,13 +98,16 @@ def invalid_organization() -> Tuple[OrganizationId, str]:
 def valid_dataset() -> Tuple[DatasetId, str]:
     return (DatasetId(1), "N:dataset:A-B")
 
+
 @pytest.fixture(scope="session")
 def other_valid_dataset() -> Tuple[DatasetId, str]:
     return (DatasetId(2), "N:dataset:C-D")
 
+
 @pytest.fixture(scope="session")
 def another_valid_dataset() -> Tuple[DatasetId, str]:
     return (DatasetId(3), "N:dataset:D-E")
+
 
 @pytest.fixture(scope="session")
 def valid_user():
@@ -391,7 +394,12 @@ def configure_delete(
 
 @pytest.fixture(scope="function")
 def authorized_user_token(
-    config, valid_organization, valid_dataset, other_valid_dataset, another_valid_dataset, valid_user
+    config,
+    valid_organization,
+    valid_dataset,
+    other_valid_dataset,
+    another_valid_dataset,
+    valid_user,
 ):
     organization_id, organization_node_id = valid_organization
     dataset_id_1, dataset_node_id_1 = valid_dataset
@@ -432,7 +440,11 @@ def authorized_user_token(
 
 @pytest.fixture(scope="function")
 def authorized_service_token(
-    config, valid_organization, valid_dataset, other_valid_dataset, another_valid_dataset
+    config,
+    valid_organization,
+    valid_dataset,
+    other_valid_dataset,
+    another_valid_dataset,
 ):
     organization_id, organization_node_id = valid_organization
     dataset_id_1, dataset_node_id_1 = valid_dataset

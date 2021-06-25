@@ -467,11 +467,12 @@ def autocomplete_model_property_values(
         for suggestions in grouped_suggestions.values()
     ]
 
+
 def filtered_datasets_by_model(
-        organization_id: int,
-        token_info: Claim,
-        model_name: str,
-        ) -> JsonDict:
+    organization_id: int,
+    token_info: Claim,
+    model_name: str,
+) -> JsonDict:
 
     x_bf_trace_id = AuditLogger.trace_id_header()
 
@@ -483,4 +484,7 @@ def filtered_datasets_by_model(
         "datasets", *[str(ds.id) for ds in datasets]
     ).log(x_bf_trace_id)
 
-    return {"datasets": [dataset.to_dict() for dataset in datasets], "count": len(datasets)}
+    return {
+        "datasets": [dataset.to_dict() for dataset in datasets],
+        "count": len(datasets),
+    }

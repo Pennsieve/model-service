@@ -10,11 +10,11 @@ from werkzeug.exceptions import BadRequest, Conflict, NotFound
 
 from core.clients import (
     AuditLogger,
-    PennsieveJobsClient,
     CreateModel,
     CreateModelProperty,
     DeleteModel,
     DeleteModelProperty,
+    PennsieveJobsClient,
     TraceId,
     UpdateModel,
     UpdateModelProperty,

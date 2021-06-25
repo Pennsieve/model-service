@@ -3909,16 +3909,17 @@ def test_autocomplete_property_deduplication(
     assert audit_logger.enhance.called
     assert audit_logger.enhance.call_count == 3
 
+
 def test_autocomplete_filtered_search(
-        client,
-        auth_headers,
-        trace_id_headers,
-        valid_organization,
-        valid_dataset,
-        other_valid_dataset,
-        another_valid_dataset,
-        model_configure,
-        api_client,
+    client,
+    auth_headers,
+    trace_id_headers,
+    valid_organization,
+    valid_dataset,
+    other_valid_dataset,
+    another_valid_dataset,
+    model_configure,
+    api_client,
 ):
     """
     Test: given a query started by the user, only select the datasets that have nodes labeled with the model searched
@@ -3946,18 +3947,21 @@ def test_autocomplete_filtered_search(
     assert r.status_code == 200
 
     results = r.json
-    assert results["count"] == 2 and len(results["datasets"])==2, "I was expecting 2 datasets with patient."
+    assert (
+        results["count"] == 2 and len(results["datasets"]) == 2
+    ), "I was expecting 2 datasets with patient."
+
 
 def test_autocomplete_filtered_empty_search(
-        client,
-        auth_headers,
-        trace_id_headers,
-        valid_organization,
-        valid_dataset,
-        other_valid_dataset,
-        another_valid_dataset,
-        model_configure,
-        api_client,
+    client,
+    auth_headers,
+    trace_id_headers,
+    valid_organization,
+    valid_dataset,
+    other_valid_dataset,
+    another_valid_dataset,
+    model_configure,
+    api_client,
 ):
     """
     Test: given a query started by the user, only select the datasets that have nodes labeled with the model searched
@@ -3985,14 +3989,17 @@ def test_autocomplete_filtered_empty_search(
     assert r.status_code == 200
 
     results = r.json
-    assert results["count"] == 0 and len(results["datasets"])==0, "I was expecting 0 datasets retrieved with the model toto"
+    assert (
+        results["count"] == 0 and len(results["datasets"]) == 0
+    ), "I was expecting 0 datasets retrieved with the model toto"
+
 
 def test_autocomplete_filtered_search_with_no_dataset(
-        client,
-        auth_headers,
-        trace_id_headers,
-        valid_organization,
-        api_client,
+    client,
+    auth_headers,
+    trace_id_headers,
+    valid_organization,
+    api_client,
 ):
     """
     Test: given a query started by the user, only select the datasets that have nodes labeled with the model searched
@@ -4009,4 +4016,6 @@ def test_autocomplete_filtered_search_with_no_dataset(
     assert r.status_code == 200
 
     results = r.json
-    assert results["count"] == 0 and len(results["datasets"]) == 0, "I was expecting 0 datasets retrieved with the model toto"
+    assert (
+        results["count"] == 0 and len(results["datasets"]) == 0
+    ), "I was expecting 0 datasets retrieved with the model toto"

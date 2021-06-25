@@ -887,10 +887,10 @@ class SearchDatabase(Transactional):
             raise InvalidDatasetError(str(dataset_filters[0].id))
 
     def _get_dataset_id_by_model_name(
-            self,
-            tx: Union[Session, Transaction],
-            model_name:str,
-    ) -> List[DatasetId]:
+        self,
+        tx: Union[Session, Transaction],
+        model_name: str,
+    ) -> List[Dataset]:
 
         cql = f"""
             MATCH ({labels.model("m")})-[{labels.in_dataset()}]->({labels.dataset("d")})
@@ -904,16 +904,12 @@ class SearchDatabase(Transactional):
 
         results = tx.run(cql, kwargs).records()
 
-        return [
-            Dataset.from_node(node["dataset"])
-            for node in results
-        ]
-
+        return [Dataset.from_node(node["dataset"]) for node in results]
 
     def get_dataset_id_by_model_name(
-            self,
-            model_name:str,
-    ) -> List[DatasetId]:
+        self,
+        model_name: str,
+    ) -> List[Dataset]:
         """
         Given a model name returns the datasets that contain the model
         :param model_name:
