@@ -3908,3 +3908,114 @@ def test_autocomplete_property_deduplication(
 
     assert audit_logger.enhance.called
     assert audit_logger.enhance.call_count == 3
+
+
+def test_autocomplete_filtered_search(
+    client,
+    auth_headers,
+    trace_id_headers,
+    valid_organization,
+    valid_dataset,
+    other_valid_dataset,
+    another_valid_dataset,
+    model_configure,
+    api_client,
+):
+    """
+    Test: given a query started by the user, only select the datasets that have nodes labeled with the model searched
+    by the user. In this test, we expect 2 datasets returned out of the 3 datasets created
+    """
+    organization_id, _ = valid_organization
+    dataset_id, dataset_node_id = valid_dataset
+    other_dataset_id, other_dataset_node_id = other_valid_dataset
+    another_dataset_id, another_dataset_node_id = another_valid_dataset
+
+    api_client.get_datasets_response = [
+        api.Dataset(dataset_node_id, dataset_id.id, "Foo"),
+        api.Dataset(other_dataset_node_id, other_dataset_id.id, "Bar"),
+        api.Dataset(another_dataset_node_id, another_dataset_id.id, "Cue"),
+    ]
+
+    patient = model_configure("patient", dataset_id=dataset_id.id)
+    patient2 = model_configure("patient", dataset_id=other_dataset_id.id)
+    doctor = model_configure("doctor", dataset_id=another_dataset_id.id)
+
+    r = client.get(
+        f"/v2/organizations/{organization_id.id}/autocomplete/models/filter/patient",
+        headers=dict(**auth_headers, **trace_id_headers),
+    )
+    assert r.status_code == 200
+
+    results = r.json
+    assert (
+        results["count"] == 2 and len(results["datasets"]) == 2
+    ), "I was expecting 2 datasets with patient."
+
+
+def test_autocomplete_filtered_empty_search(
+    client,
+    auth_headers,
+    trace_id_headers,
+    valid_organization,
+    valid_dataset,
+    other_valid_dataset,
+    another_valid_dataset,
+    model_configure,
+    api_client,
+):
+    """
+    Test: given a query started by the user, only select the datasets that have nodes labeled with the model searched
+    by the user. In this test, we expect 0 datasets returned out of the 3 datasets created
+    """
+    organization_id, _ = valid_organization
+    dataset_id, dataset_node_id = valid_dataset
+    other_dataset_id, other_dataset_node_id = other_valid_dataset
+    another_dataset_id, another_dataset_node_id = another_valid_dataset
+
+    api_client.get_datasets_response = [
+        api.Dataset(dataset_node_id, dataset_id.id, "Foo"),
+        api.Dataset(other_dataset_node_id, other_dataset_id.id, "Bar"),
+        api.Dataset(another_dataset_node_id, another_dataset_id.id, "Cue"),
+    ]
+
+    patient = model_configure("patient", dataset_id=dataset_id.id)
+    patient2 = model_configure("patient", dataset_id=other_dataset_id.id)
+    doctor = model_configure("doctor", dataset_id=another_dataset_id.id)
+
+    r = client.get(
+        f"/v2/organizations/{organization_id.id}/autocomplete/models/filter/toto",
+        headers=dict(**auth_headers, **trace_id_headers),
+    )
+    assert r.status_code == 200
+
+    results = r.json
+    assert (
+        results["count"] == 0 and len(results["datasets"]) == 0
+    ), "I was expecting 0 datasets retrieved with the model toto"
+
+
+def test_autocomplete_filtered_search_with_no_dataset(
+    client,
+    auth_headers,
+    trace_id_headers,
+    valid_organization,
+    api_client,
+):
+    """
+    Test: given a query started by the user, only select the datasets that have nodes labeled with the model searched
+    by the user. In this test, the user has no datasets available, expect 0 datasets returned out
+    """
+    organization_id, _ = valid_organization
+
+    api_client.get_datasets_response = []
+
+    r = client.get(
+        f"/v2/organizations/{organization_id.id}/autocomplete/models/filter/toto",
+        headers=dict(**auth_headers, **trace_id_headers),
+    )
+    assert r.status_code == 200
+
+    results = r.json
+    assert (
+        results["count"] == 0 and len(results["datasets"]) == 0
+    ), "I was expecting 0 datasets retrieved with the model toto"

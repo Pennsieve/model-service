@@ -7,12 +7,12 @@ from werkzeug.exceptions import NotFound
 
 from core.clients import (
     AuditLogger,
-    PennsieveApiClient,
-    PennsieveJobsClient,
     CreateModel,
     CreateModelProperty,
     DeleteModel,
     DeleteModelProperty,
+    PennsieveApiClient,
+    PennsieveJobsClient,
     TraceId,
     UpdateModel,
     UpdateModelProperty,
