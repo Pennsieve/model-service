@@ -554,6 +554,11 @@ def sample_patient_db(partitioned_db):
 
 
 @pytest.fixture(scope="function")
+def other_sample_patient_db(other_partitioned_db):
+    return fixtures.sample_patient_db(other_partitioned_db)
+
+
+@pytest.fixture(scope="function")
 def movie_db(partitioned_db):
     return fixtures.movie_db(partitioned_db)
 
