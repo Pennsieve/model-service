@@ -4019,3 +4019,44 @@ def test_autocomplete_filtered_search_with_no_dataset(
     assert (
         results["count"] == 0 and len(results["datasets"]) == 0
     ), "I was expecting 0 datasets retrieved with the model toto"
+
+
+def test_autocomplete_filtered_search_with_one_restricted_dataset(
+    client,
+    auth_headers,
+    trace_id_headers,
+    valid_organization,
+    other_valid_dataset,
+    another_valid_dataset,
+    other_sample_patient_db,
+    model_configure,
+    api_client,
+):
+    """
+    Test: given a query started by the user, only select the datasets that have nodes labeled with the model searched
+    by the user. In this test, 3 datasets have the model patient but only 2 dataset are accessible to the user
+    """
+    organization_id, _ = valid_organization
+    other_dataset_id, other_dataset_node_id = other_valid_dataset
+    another_dataset_id, another_dataset_node_id = another_valid_dataset
+
+    # other_valid_dataset and another_valid_dataset are accessible to the user,
+    # other_sample_patient_db is not (created by another user from the same organisation)
+    api_client.get_datasets_response = [
+        api.Dataset(other_dataset_node_id, other_dataset_id.id, "Foo"),
+        api.Dataset(another_dataset_node_id, another_dataset_id.id, "Bar"),
+    ]
+
+    db2patient = model_configure("patient", dataset_id=other_dataset_id.id)
+    db2patient = model_configure("patient", dataset_id=another_dataset_id.id)
+
+    r = client.get(
+        f"/v2/organizations/{organization_id.id}/autocomplete/models/filter/patient",
+        headers=dict(**auth_headers, **trace_id_headers),
+    )
+    assert r.status_code == 200
+
+    results = r.json
+    assert (
+        results["count"] == 2 and len(results["datasets"]) == 2
+    ), "I was expecting 2 datasets with patient."

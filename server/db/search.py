@@ -892,12 +892,18 @@ class SearchDatabase(Transactional):
         model_name: str,
     ) -> List[Dataset]:
 
+        if not self.dataset_ids:
+            return []
+
         cql = f"""
             MATCH ({labels.model("m")})-[{labels.in_dataset()}]->({labels.dataset("d")})
-            WHERE m.name = $model_name
+            WHERE m.name = $model_name AND d.id IN $dataset_ids
             RETURN d AS dataset
         """
-        kwargs = dict(model_name=model_name)
+        # kwargs = dict(model_name=model_name)
+        kwargs: Dict[str, GraphValue] = dict(
+            model_name=model_name, dataset_ids=self.dataset_ids
+        )
 
         log.debug(cql)
         log.debug(kwargs)
