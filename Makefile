@@ -3,7 +3,7 @@
 LOG_LEVEL          ?= "INFO"
 USE_CACHE          ?= "0"
 NEO4J_APOC_VERSION ?= "3.5.0.13"
-PIP_VERSION        := "19.2.3"
+PIP_VERSION        := "22.0.3"
 IMAGE_TAG          ?= "latest"
 PORT               ?= 8080
 
