@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 import pytest
-from blackfynn import Blackfynn
+from pennsieve import Pennsieve
 
 from core.clients import PennsieveApiClient
 
@@ -14,7 +14,7 @@ class Package:
 
 @pytest.fixture
 def bf():
-    return Blackfynn()
+    return Pennsieve()
 
 
 @pytest.fixture
