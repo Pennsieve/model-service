@@ -23,7 +23,7 @@ structlog = "*"
 newrelic = "*"
 mimesis = "==3.3.0"
 py-spy = "==0.1.11"
-Flask = "*"
+Flask = "==1.1.4"
 
 [requires]
 python_version = "3.7"
