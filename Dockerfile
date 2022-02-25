@@ -33,7 +33,7 @@ WORKDIR app
 
 ENV PATH "/home/pennsieve/.local/bin:$PATH"
 
-CMD ["--service", "model-service", "run-python", "main.py", "--host", "0.0.0.0", "--port", "8080", "--threads", "4"]
+CMD ["--service", "model-service", "exec", "main.py", "--host", "0.0.0.0", "--port", "8080", "--threads", "4"]
 
 ###############################################################################
 # TARGET: publish
