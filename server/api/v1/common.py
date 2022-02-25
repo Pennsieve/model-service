@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import Dict, List, Optional, Union
 from uuid import UUID
 
+import humps
 import neotime
 from humps import decamelize
 
@@ -39,7 +40,7 @@ NULL_UUID = UUID(int=0)
 
 
 def filter_model_dict(body: JsonDict) -> JsonDict:
-    return {k: v for k, v in body.items() if k in Model.PUBLIC}
+    return {humps.decamelize(k): v for k, v in body.items() if humps.decamelize(k) in Model.PUBLIC}
 
 
 def to_concept_dict(m: Model, property_count: int) -> JsonDict:
