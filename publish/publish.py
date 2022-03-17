@@ -147,6 +147,7 @@ def read_file_manifests(s3, config: PublishConfig) -> List[FileManifest]:
     body = s3.get_object(
         Bucket=config.s3_bucket,
         Key=str(PUBLISH_ASSETS_FILE.with_prefix(config.s3_publish_key)),
+        RequestPayer="requester",
     )["Body"].read()
 
     return FileManifest.schema().load(json.loads(body)["packageManifests"], many=True)
@@ -168,6 +169,7 @@ def write_graph_manifests(
         Bucket=config.s3_bucket,
         Key=str(graph_manifest_file),
         Body=exported_manifests.to_json(camel_case=True),
+        RequestPayer="requester",
     )
 
 
@@ -270,6 +272,7 @@ def publish_schema(
         Bucket=config.s3_bucket,
         Key=str(schema_output_file),
         Body=schema.to_json(camel_case=True, pretty_print=True, drop_nulls=True),
+        RequestPayer="requester",
     )
     schema_manifest = schema_output_file.with_prefix(METADATA).as_manifest(
         size_of(s3, config.s3_bucket, schema_output_file)
@@ -534,7 +537,9 @@ def publish_relationships(
 
 
 def size_of(s3, bucket, key) -> int:
-    return s3.head_object(Bucket=bucket, Key=str(key))["ContentLength"]
+    return s3.head_object(Bucket=bucket, Key=str(key), RequestPayer="requester")[
+        "ContentLength"
+    ]
 
 
 @contextmanager
@@ -552,4 +557,6 @@ def s3_csv_writer(s3, bucket, key, headers):
         writer.writerow(headers)
         yield writer
 
-    s3.upload_file(Filename=temp_file.name, Bucket=bucket, Key=str(key))
+    s3.upload_file(
+        Filename=temp_file.name, Bucket=bucket, Key=str(key), RequestPayer="requester"
+    )
