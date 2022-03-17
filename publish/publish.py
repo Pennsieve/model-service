@@ -558,5 +558,8 @@ def s3_csv_writer(s3, bucket, key, headers):
         yield writer
 
     s3.upload_file(
-        Filename=temp_file.name, Bucket=bucket, Key=str(key), RequestPayer="requester"
+        Filename=temp_file.name,
+        Bucket=bucket,
+        Key=str(key),
+        ExtraArgs={"RequestPayer": "requester"},
     )
