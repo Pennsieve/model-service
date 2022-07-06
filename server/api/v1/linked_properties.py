@@ -56,7 +56,7 @@ def create_schema_linked_property(
                 name=body["name"],
                 to_model=body["to"],
                 one_to_many=False,
-                display_name=body["display_name"],
+                display_name=body["displayName"],
                 index=body.get("position", None),
             )
         ),
@@ -103,7 +103,7 @@ def update_schema_linked_property(
     return to_schema_linked_property(
         db.update_model_relationship(
             relationship=link_id,
-            display_name=body["display_name"],
+            display_name=body["displayName"],
             index=body.get("position", None),
         )
     )
@@ -127,7 +127,7 @@ def create_linked_property(
 ):
     (rr, _) = db.create_record_relationship(
         from_record=id_,
-        relationship=body["schema_linked_property_id"],
+        relationship=body["schemaLinkedPropertyId"],
         to_record=body["to"],
     )
     return to_linked_property(rr), 201

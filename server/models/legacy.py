@@ -339,7 +339,7 @@ class SelectGroupCount(Select):
 # =============================================================================
 
 
-class GraphQuerySchema(marshmallow.Schema):
+class GraphQuerySchema(CamelCaseSchema):
     type = fields.Method(
         data_key="type", serialize="_write_type", deserialize="_read_type"
     )

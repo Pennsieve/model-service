@@ -7,6 +7,7 @@ from uuid import UUID
 from auth_middleware.models import DatasetPermission  # type: ignore
 from flask import current_app
 from werkzeug.exceptions import BadRequest, Conflict, NotFound
+from humps import decamelize
 
 from core.clients import (
     AuditLogger,
@@ -29,7 +30,7 @@ from server.models import JsonDict, ModelId, ModelProperty, ModelRelationshipId
 @permission_required(DatasetPermission.MANAGE_GRAPH_SCHEMA)
 @touch_dataset_timestamp
 def create_model(db: PartitionedDatabase, body: JsonDict) -> Tuple[JsonDict, int]:
-    model = db.create_model(**body)
+    model = db.create_model(**decamelize(body))
     x_bf_trace_id = AuditLogger.trace_id_header()
     # Emit "CreateModel" event:
     PennsieveJobsClient.get().send_changelog_event(
@@ -44,7 +45,7 @@ def create_model(db: PartitionedDatabase, body: JsonDict) -> Tuple[JsonDict, int
 
 @permission_required(DatasetPermission.VIEW_GRAPH_SCHEMA)
 def get_all_models(
-    db: PartitionedDatabase,
+        db: PartitionedDatabase,
 ) -> List[JsonDict]:
     return [m.to_dict() for m in db.get_models()]
 
@@ -57,9 +58,9 @@ def get_model(db: PartitionedDatabase, model_id_or_name: str) -> JsonDict:
 @permission_required(DatasetPermission.MANAGE_GRAPH_SCHEMA)
 @touch_dataset_timestamp
 def update_model(
-    db: PartitionedDatabase, model_id_or_name: str, body: JsonDict
+        db: PartitionedDatabase, model_id_or_name: str, body: JsonDict
 ) -> JsonDict:
-    model = db.update_model(model_id_or_name, **body)
+    model = db.update_model(model_id_or_name, **decamelize(body))
     x_bf_trace_id = AuditLogger.trace_id_header()
     # Emit "UpdateModel" event:
     PennsieveJobsClient.get().send_changelog_event(
@@ -90,7 +91,7 @@ def delete_model(db: PartitionedDatabase, model_id_or_name: str) -> None:
 
 @permission_required(DatasetPermission.VIEW_GRAPH_SCHEMA)
 def get_all_properties(
-    db: PartitionedDatabase, model_id_or_name: str
+        db: PartitionedDatabase, model_id_or_name: str
 ) -> List[JsonDict]:
     return [p.to_dict() for p in db.get_properties(model_id_or_name)]
 
@@ -98,7 +99,7 @@ def get_all_properties(
 @permission_required(DatasetPermission.MANAGE_GRAPH_SCHEMA)
 @touch_dataset_timestamp
 def update_properties(
-    db: PartitionedDatabase, model_id_or_name: str, body: List[JsonDict]
+        db: PartitionedDatabase, model_id_or_name: str, body: List[JsonDict]
 ):
     x_bf_trace_id = AuditLogger.trace_id_header()
     payload: List[ModelProperty] = ModelProperty.schema().load(body, many=True)
@@ -129,12 +130,11 @@ def update_properties(
 @permission_required(DatasetPermission.MANAGE_GRAPH_SCHEMA)
 @touch_dataset_timestamp
 def delete_property(
-    db: PartitionedDatabase,
-    model_id: str,
-    property_name: str,
-    modify_records: bool = False,
+        db: PartitionedDatabase,
+        model_id: str,
+        property_name: str,
+        modify_records: bool = False,
 ) -> None:
-
     x_bf_trace_id = AuditLogger.trace_id_header()
     max_record_count = current_app.config[
         "config"
@@ -185,16 +185,15 @@ def delete_property(
 @permission_required(DatasetPermission.MANAGE_GRAPH_SCHEMA)
 @touch_dataset_timestamp
 def create_relationship(
-    db: PartitionedDatabase, model_id_or_name: str, body: JsonDict
+        db: PartitionedDatabase, model_id_or_name: str, body: JsonDict
 ) -> Tuple[JsonDict, int]:
-    # connexion converts "type" to "type_":
     return (
         db.create_model_relationship(
             from_model=model_id_or_name,
-            name=body["type_"],
+            name=body["type"],
             to_model=body["to"],
-            one_to_many=body["one_to_many"],
-            display_name=body.get("display_name", body["type_"]),
+            one_to_many=body["oneToMany"],
+            display_name=body.get("displayName", body["type"]),
         ).to_dict(),
         201,
     )
@@ -202,7 +201,7 @@ def create_relationship(
 
 @permission_required(DatasetPermission.VIEW_GRAPH_SCHEMA)
 def get_relationship(
-    db: PartitionedDatabase, model_id_or_name: str, relationship_id: ModelRelationshipId
+        db: PartitionedDatabase, model_id_or_name: str, relationship_id: ModelRelationshipId
 ) -> JsonDict:
     relationship = db.get_model_relationship(relationship_id)
     if relationship is None:
@@ -224,20 +223,20 @@ def get_relationships(db: PartitionedDatabase, model_id_or_name: str) -> List[Js
 @permission_required(DatasetPermission.MANAGE_GRAPH_SCHEMA)
 @touch_dataset_timestamp
 def update_relationship(
-    db: PartitionedDatabase,
-    model_id_or_name: str,
-    relationship_id: ModelRelationshipId,
-    body: JsonDict,
+        db: PartitionedDatabase,
+        model_id_or_name: str,
+        relationship_id: ModelRelationshipId,
+        body: JsonDict,
 ) -> JsonDict:
     return db.update_model_relationship(
-        relationship=relationship_id, display_name=body["display_name"]
+        relationship=relationship_id, display_name=body["displayName"]
     ).to_dict()
 
 
 @permission_required(DatasetPermission.MANAGE_GRAPH_SCHEMA)
 @touch_dataset_timestamp
 def delete_relationship(
-    db: PartitionedDatabase, model_id_or_name: str, relationship_id: ModelRelationshipId
+        db: PartitionedDatabase, model_id_or_name: str, relationship_id: ModelRelationshipId
 ) -> None:
     with db.transaction() as tx:
         deleted = db.delete_model_relationship_tx(tx=tx, relationship=relationship_id)

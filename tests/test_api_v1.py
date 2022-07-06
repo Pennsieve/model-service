@@ -566,7 +566,7 @@ def test_concept_properties(
         concept_id=concept["id"],
         age_id=age_id,
     )
-    assert r.status_code == 200
+    assert r.status_code == 204
 
     # "UpdateModel" should be emitted:
     jobs_client.send_changelog_event.assert_called_with(
@@ -2751,7 +2751,7 @@ def test_package_proxies(
     r = delete(
         "/v1/datasets/{dataset}/proxy/package/instances/{id}", id=proxyInstance1["id"]
     )
-    assert r.status_code == 200
+    assert r.status_code == 204
 
     # Gone.
     r = get(
@@ -3281,7 +3281,7 @@ def test_graph_summary(movie_db, get):
 
 def test_query_parsing():
     assert legacy.GraphQuery.schema().loads(
-        """{"type": {"concept": {"type": "movie"} }, "filters": [], "joins": [], "order_by": null, "limit": null, "offset": null, "select": null }"""
+        """{"type": {"concept": {"type": "movie"} }, "filters": [], "joins": [], "orderBy": null, "limit": null, "offset": null, "select": null }"""
     ) == legacy.GraphQuery(
         type=legacy.ConceptQueryType(type="movie"),
         filters=[],
@@ -3293,7 +3293,7 @@ def test_query_parsing():
     )
 
     assert legacy.GraphQuery.schema().loads(
-        """{"type": {"concept": {"type": "movie"} }, "filters": [], "joins": [], "order_by": null, "limit": 5, "offset": 5, "select": null }"""
+        """{"type": {"concept": {"type": "movie"} }, "filters": [], "joins": [], "orderBy": null, "limit": 5, "offset": 5, "select": null }"""
     ) == legacy.GraphQuery(
         type=legacy.ConceptQueryType(type="movie"),
         filters=[],
@@ -3305,7 +3305,7 @@ def test_query_parsing():
     )
 
     assert legacy.GraphQuery.schema().loads(
-        """{"type": {"concept": {"type": "movie"} }, "filters": [], "joins": [], "order_by": {"Ascending": {"field": "title"} }, "limit": null, "offset": null, "select": null }"""
+        """{"type": {"concept": {"type": "movie"} }, "filters": [], "joins": [], "orderBy": {"Ascending": {"field": "title"} }, "limit": null, "offset": null, "select": null }"""
     ) == legacy.GraphQuery(
         type=legacy.ConceptQueryType(type="movie"),
         filters=[],
@@ -3317,7 +3317,7 @@ def test_query_parsing():
     )
 
     assert legacy.GraphQuery.schema().loads(
-        """{"type": {"concept": {"type": "movie"} }, "filters": [{"key": "totallyBogusKey", "predicate": {"operation": "eq", "value": 4955304709811152113 } } ], "joins": [], "order_by": null, "limit": null, "offset": null, "select": null }"""
+        """{"type": {"concept": {"type": "movie"} }, "filters": [{"key": "totallyBogusKey", "predicate": {"operation": "eq", "value": 4955304709811152113 } } ], "joins": [], "orderBy": null, "limit": null, "offset": null, "select": null }"""
     ) == legacy.GraphQuery(
         type=legacy.ConceptQueryType(type="movie"),
         filters=[
@@ -3334,7 +3334,7 @@ def test_query_parsing():
     )
 
     assert legacy.GraphQuery.schema().loads(
-        """{"type": {"concept": {"type": "award"} }, "filters": [], "joins": [{"relationshipType": "WON", "targetType": {"concept": {"type": "genre"} }, "filters": [], "key": null } ], "order_by": null, "limit": null, "offset": null, "select": null }"""
+        """{"type": {"concept": {"type": "award"} }, "filters": [], "joins": [{"relationshipType": "WON", "targetType": {"concept": {"type": "genre"} }, "filters": [], "key": null } ], "orderBy": null, "limit": null, "offset": null, "select": null }"""
     ) == legacy.GraphQuery(
         type=legacy.ConceptQueryType(type="award"),
         filters=[],
@@ -3353,7 +3353,7 @@ def test_query_parsing():
     )
 
     assert legacy.GraphQuery.schema().loads(
-        """{"type": {"concept": {"type": "movie"} }, "filters": [], "joins": [], "order_by": null, "limit": null, "offset": null, "select": {"GroupCount": {"field": "foo", "key": null } } }"""
+        """{"type": {"concept": {"type": "movie"} }, "filters": [], "joins": [], "orderBy": null, "limit": null, "offset": null, "select": {"GroupCount": {"field": "foo", "key": null } } }"""
     ) == legacy.GraphQuery(
         type=legacy.ConceptQueryType(type="movie"),
         filters=[],
@@ -3365,7 +3365,7 @@ def test_query_parsing():
     )
 
     assert legacy.GraphQuery.schema().loads(
-        """{"type": {"concept": {"type": "award"} }, "filters": [], "joins": [{"relationshipType": null, "targetType": {"concept": {"type": "genre"} }, "filters": [], "key": "joinKey"} ], "order_by": null, "limit": null, "offset": null, "select": {"GroupCount": {"field": "title", "key": null } } }"""
+        """{"type": {"concept": {"type": "award"} }, "filters": [], "joins": [{"relationshipType": null, "targetType": {"concept": {"type": "genre"} }, "filters": [], "key": "joinKey"} ], "orderBy": null, "limit": null, "offset": null, "select": {"GroupCount": {"field": "title", "key": null } } }"""
     ) == legacy.GraphQuery(
         type=legacy.ConceptQueryType(type="award"),
         filters=[],
@@ -3384,7 +3384,7 @@ def test_query_parsing():
     )
 
     assert legacy.GraphQuery.schema().loads(
-        """{"type": {"proxy": {"type": "package"} }, "filters": [{"key": "name", "predicate": {"operation": "neq", "value": "QLCrDvhiNM"} } ], "joins": [], "order_by": null, "limit": null, "offset": null, "select": null }"""
+        """{"type": {"proxy": {"type": "package"} }, "filters": [{"key": "name", "predicate": {"operation": "neq", "value": "QLCrDvhiNM"} } ], "joins": [], "orderBy": null, "limit": null, "offset": null, "select": null }"""
     ) == legacy.GraphQuery(
         type=legacy.ProxyQueryType(),
         filters=[
@@ -3401,7 +3401,7 @@ def test_query_parsing():
     )
 
     assert legacy.GraphQuery.schema().loads(
-        """{"type": {"proxy": {"type": "package"} }, "filters": [{"key": "type", "predicate": {"operation": "eq", "value": "CSV"} } ], "joins": [], "order_by": null, "limit": null, "offset": null, "select": null }"""
+        """{"type": {"proxy": {"type": "package"} }, "filters": [{"key": "type", "predicate": {"operation": "eq", "value": "CSV"} } ], "joins": [], "orderBy": null, "limit": null, "offset": null, "select": null }"""
     ) == legacy.GraphQuery(
         type=legacy.ProxyQueryType(),
         filters=[
@@ -3417,7 +3417,7 @@ def test_query_parsing():
     )
 
     assert legacy.GraphQuery.schema().loads(
-        """{"type": {"proxy": {"type": "package"} }, "filters": [{"key": "nodeId", "predicate": {"operation": "eq", "value": "N:package:55f97c52-cc96-426a-9204-972577cce0d3"} } ], "joins": [], "order_by": null, "limit": null, "offset": null, "select": null }"""
+        """{"type": {"proxy": {"type": "package"} }, "filters": [{"key": "nodeId", "predicate": {"operation": "eq", "value": "N:package:55f97c52-cc96-426a-9204-972577cce0d3"} } ], "joins": [], "orderBy": null, "limit": null, "offset": null, "select": null }"""
     ) == legacy.GraphQuery(
         type=legacy.ProxyQueryType(),
         filters=[
@@ -3437,7 +3437,7 @@ def test_query_parsing():
     )
 
     assert legacy.GraphQuery.schema().loads(
-        """{"type": {"concept": {"type": "movie"} }, "filters": [], "joins": [], "order_by": {"Ascending": {"field": "title"} }, "limit": 5, "offset": 5, "select": null }"""
+        """{"type": {"concept": {"type": "movie"} }, "filters": [], "joins": [], "orderBy": {"Ascending": {"field": "title"} }, "limit": 5, "offset": 5, "select": null }"""
     ) == legacy.GraphQuery(
         type=legacy.ConceptQueryType(type="movie"),
         filters=[],
@@ -3449,7 +3449,7 @@ def test_query_parsing():
     )
 
     assert legacy.GraphQuery.schema().loads(
-        """{"type":{"concept":{"type":"movie"}},"filters":[],"joins":[], "order_by": { "Descending": { "field": "name" } } }"""
+        """{"type":{"concept":{"type":"movie"}},"filters":[],"joins":[], "orderBy": { "Descending": { "field": "name" } } }"""
     ) == legacy.GraphQuery(
         type=legacy.ConceptQueryType(type="movie"),
         filters=[],
@@ -3469,7 +3469,7 @@ def test_legacy_querying(configure_post, audit_logger, movie_db):
     payload = json.loads(
         """{"type":{"concept":{"type":"person"}},"filters":[],"joins":[{"targetType":{"concept":{"type":"award"}},"filters":[],"key":"site"}], "orderBy": { "Ascending": { "field": "name" } } }"""
     )
-    # connexion converts camelcased keys in `payload` to snake case:
+
     r = post("/v1/datasets/{dataset}/query/run", json=payload)
     result = r.json
     assert r.status_code == 200

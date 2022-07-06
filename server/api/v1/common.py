@@ -39,7 +39,7 @@ NULL_UUID = UUID(int=0)
 
 
 def filter_model_dict(body: JsonDict) -> JsonDict:
-    return {k: v for k, v in body.items() if k in Model.PUBLIC}
+    return {decamelize(k): v for k, v in body.items() if decamelize(k) in Model.PUBLIC}
 
 
 def to_concept_dict(m: Model, property_count: int) -> JsonDict:

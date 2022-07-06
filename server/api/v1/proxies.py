@@ -83,7 +83,7 @@ def create_proxy_instance(
 
             package = PennsieveApiClient.get().get_package_ids(
                 db.dataset_node_id,
-                body["external_id"],
+                body["externalId"],
                 headers=dict(**auth_header(), **with_trace_id_header(x_bf_trace_id)),
             )
 
