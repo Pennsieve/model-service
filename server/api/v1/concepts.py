@@ -43,8 +43,7 @@ from .common import (
 @touch_dataset_timestamp
 def create_concept(db: PartitionedDatabase, body: JsonDict) -> Tuple[JsonDict, int]:
     x_bf_trace_id = AuditLogger.trace_id_header()
-    filtered_body = filter_model_dict(body)
-    model = db.create_model(**filtered_body)
+    model = db.create_model(**filter_model_dict(body))
     # Emit "CreateModel" event:
     PennsieveJobsClient.get().send_changelog_event(
         organization_id=db.organization_id,
