@@ -10,3 +10,6 @@ sqlalchemy
 psycopg2
 moto[all]==1.3.16
 docker
+types-Flask==1.1.6
+# Check https://github.com/python/typeshed/issues/6893 before updating types-requests version
+types-requests==2.26.3
