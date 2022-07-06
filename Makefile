@@ -42,7 +42,7 @@ setup-indexes:
 
 # Third-party test code is using a deprecated feature of requests resulting in thousands of warnings polluting logs
 test: typecheck format
-	pytest -s -v tests -W ignore::DeprecationWarning:responses:449
+	pytest -s -v tests -W ignore::DeprecationWarning:responses:555
 
 jwt:
 	python bin/generate_jwt.py
