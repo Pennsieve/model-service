@@ -40,8 +40,9 @@ install:
 setup-indexes:
 	python -m server.db.index
 
+# Third-party test code is using a deprecated feature of requests resulting in thousands of warnings polluting logs
 test: typecheck format
-	pytest -s -v tests
+	pytest -s -v tests -W ignore::DeprecationWarning:responses:449
 
 jwt:
 	python bin/generate_jwt.py
