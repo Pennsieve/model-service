@@ -332,7 +332,7 @@ def test_models(
         f"/v2/organizations/{organization_id.id}/datasets/{dataset_id.id}/models/{model_id}",
         headers=dict(**auth_headers, **trace_id_headers),
     )
-    assert r.status_code == 200
+    assert r.status_code == 204
 
     # "DeleteModel" should be emitted:
     jobs_client.send_changelog_event.assert_called_with(
@@ -631,7 +631,7 @@ def test_model_properties(
         f"/v2/organizations/{organization_id.id}/datasets/{dataset_id.id}/models/{model['id']}/properties/{prop['id']}",
         headers=dict(**auth_headers, **trace_id_headers),
     )
-    assert r.status_code == 200
+    assert r.status_code == 204
 
     # The property no longer exists
     r = client.get(
@@ -1018,14 +1018,14 @@ def test_delete_properties(
         f"/v2/organizations/{organization_id.id}/datasets/{dataset_id.id}/records/{record['id']}",
         headers=dict(**auth_headers, **trace_id_headers),
     )
-    assert r.status_code == 200
+    assert r.status_code == 204
 
     # Deleting the property should be successful:
     r = client.delete(
         f"/v2/organizations/{organization_id.id}/datasets/{dataset_id.id}/models/{model['id']}/properties/{props[0]['name']}",
         headers=dict(**auth_headers, **trace_id_headers),
     )
-    assert r.status_code == 200
+    assert r.status_code == 204
 
     # Model should be marked as updated:
     jobs_client.send_changelog_event.assert_called_with(
@@ -1078,7 +1078,7 @@ def test_delete_properties(
         f"/v2/organizations/{organization_id.id}/datasets/{dataset_id.id}/models/{model['id']}/properties/{props[0]['name']}?modifyRecords=true",
         headers=dict(**auth_headers, **trace_id_headers),
     )
-    assert r.status_code == 200
+    assert r.status_code == 204
 
     # NOTE: if we remove the only property from a record, it ends up orphaned (no values)!
     # Delete the record so it doesn't mess with subsequent tests:
@@ -1086,7 +1086,7 @@ def test_delete_properties(
         f"/v2/organizations/{organization_id.id}/datasets/{dataset_id.id}/records/{record['id']}",
         headers=dict(**auth_headers, **trace_id_headers),
     )
-    assert r.status_code == 200
+    assert r.status_code == 204
 
     # create two properties on the model
     r = client.put(
@@ -1130,7 +1130,7 @@ def test_delete_properties(
         f"/v2/organizations/{organization_id.id}/datasets/{dataset_id.id}/models/{model['id']}/properties/{props[0]['name']}?modifyRecords=true",
         headers=dict(**auth_headers, **trace_id_headers),
     )
-    assert r.status_code == 200
+    assert r.status_code == 204
 
     # make sure the bar properties remain on the records
     r = client.get(
@@ -1821,7 +1821,7 @@ def test_records(
         f"/v2/organizations/{organization_id.id}/datasets/{dataset_id.id}/records/{record['id']}",
         headers=dict(**auth_headers, **trace_id_headers),
     )
-    assert r.status_code == 200
+    assert r.status_code == 204
 
     # Emit DeleteRecord
     jobs_client.send_changelog_event.assert_called_with(

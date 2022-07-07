@@ -140,10 +140,6 @@ def run(db: PartitionedDatabase, body: JsonDict) -> List[JsonDict]:
 
     x_bf_trace_id = AuditLogger.trace_id_header()
 
-    # connexion renames properties called "type" to "type_":
-    body["type"] = body.pop("type_")
-
-    # connexion converted CamelCased keys to snake_case:
     legacy_query = GraphQuery.schema().load(body)
     limit = int(legacy_query.limit) if legacy_query.limit is not None else 25
     offset = int(legacy_query.offset) if legacy_query.offset is not None else 0

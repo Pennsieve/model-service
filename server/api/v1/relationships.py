@@ -65,7 +65,8 @@ def get_concept_relationship(
 
 @permission_required(DatasetPermission.VIEW_GRAPH_SCHEMA)
 def get_concept_relationships(db: PartitionedDatabase, **kwargs) -> List[JsonDict]:
-    from_: Optional[ModelRelationshipId] = kwargs.get("from", None)
+    # As 'from' is a reserved word, connexion adds the underscore
+    from_: Optional[ModelRelationshipId] = kwargs.get("from_", None)
     to: Optional[ModelRelationshipId] = kwargs.get("to", None)
 
     with db.transaction() as tx:
@@ -97,7 +98,7 @@ def create_concept_relationship(
     from_model = body.get("from", None)
     to_model = body.get("to", None)
     name = body["name"]
-    display_name = body["display_name"]
+    display_name = body["displayName"]
     description = body["description"]
 
     with db.transaction() as tx:
@@ -133,7 +134,7 @@ def update_concept_relationship(
 
     relationship = db.update_model_relationship(
         relationship=to_relationship_id_or_name(relationship_id_or_name),
-        display_name=body["display_name"],
+        display_name=body["displayName"],
     )
     if relationship is None:
         raise NotFound(f"Could not get model relationship [{relationship_id_or_name}]")

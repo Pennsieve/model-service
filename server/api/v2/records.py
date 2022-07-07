@@ -234,7 +234,7 @@ def create_relationship(
     db: PartitionedDatabase, record_id: RecordId, body: JsonDict
 ) -> Tuple[JsonDict, int]:
     (relationship, _) = db.create_record_relationship(
-        from_record=record_id, relationship=body["type_"], to_record=body["to"]
+        from_record=record_id, relationship=body["type"], to_record=body["to"]
     )
     return relationship.to_dict(), 201
 
