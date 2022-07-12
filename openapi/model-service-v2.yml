@@ -179,7 +179,7 @@ paths:
           schema:
             $ref: '#/components/schemas/ModelIdentifier'
       responses:
-        "200":
+        "204":
           description: successful operation
       security:
         - Bearer: []
@@ -304,7 +304,7 @@ paths:
             type: boolean
             default: False
       responses:
-        '200':
+        '204':
           description: successful operation
       security:
         - Bearer: []
@@ -570,7 +570,7 @@ paths:
           schema:
             $ref: '#/components/schemas/RecordIdentifier'
       responses:
-        '200':
+        '204':
           description: successful operation
           # schema:
           #   $ref: '#/components/schemas/Record'
