@@ -411,11 +411,11 @@ class Model(FromNodeMixin, Serializable):
 
     __schema__: ClassVar[ModelSchema] = ModelSchema(unknown=marshmallow.EXCLUDE)
 
-    PUBLIC_CAMEL: ClassVar[Set[str]] = set(
-        ["id", "name", "displayName", "description", "templateId"]
+    REST_REQUEST_MODEL: ClassVar[Set[str]] = set(
+        ["name", "displayName", "description", "templateId"]
     )
 
-    PUBLIC: ClassVar[Set[str]] = humps.decamelize(PUBLIC_CAMEL)
+    PUBLIC: ClassVar[Set[str]] = set(["id"]).union(humps.decamelize(REST_REQUEST_MODEL))
 
     id: t.ModelId
     name: str
