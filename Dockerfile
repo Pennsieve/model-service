@@ -13,7 +13,8 @@ WORKDIR app
 
 RUN echo 'manylinux1_compatible = True' > /usr/local/lib/python3.7/site-packages/_manylinux.py
 COPY requirements.txt ./
-RUN pip install -r requirements.txt --user --extra-index-url "https://$PENNSIEVE_NEXUS_USER:$PENNSIEVE_NEXUS_PW@nexus.pennsieve.cc/repository/pypi-prod/simple"
+COPY cython_constraint.txt ./
+RUN PIP_CONSTRAINT=cython_constraint.txt pip install -r requirements.txt --user --extra-index-url "https://$PENNSIEVE_NEXUS_USER:$PENNSIEVE_NEXUS_PW@nexus.pennsieve.cc/repository/pypi-prod/simple"
 
 COPY main.py  ./main.py
 COPY core/    ./core/
