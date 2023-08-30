@@ -275,7 +275,8 @@ def publish_schema(
         RequestPayer="requester",
     )
     schema_manifest = schema_output_file.with_prefix(METADATA).as_manifest(
-        size_of(s3, config.s3_bucket, schema_output_file)
+        size_of(s3, config.s3_bucket, schema_output_file),
+        s3_version_id = version_of(s3, config.s3_bucket, schema_output_file)
     )
 
     return schema, schema_manifest
@@ -394,7 +395,8 @@ def publish_records_of_model(
             writer.writerow(record_row(r, model_properties, linked_properties))
 
     return output_file.with_prefix(METADATA).as_manifest(
-        size_of(s3, config.s3_bucket, output_file)
+        size_of(s3, config.s3_bucket, output_file),
+        s3_version_id = version_of(s3, config.s3_bucket, output_file)
     )
 
 
@@ -446,7 +448,8 @@ def publish_package_proxy_files(
                 )
 
     return file_output_file.with_prefix(METADATA).as_manifest(
-        size_of(s3, config.s3_bucket, file_output_file)
+        size_of(s3, config.s3_bucket, file_output_file),
+        s3_version_id = version_of(s3, config.s3_bucket, file_output_file)
     )
 
 
@@ -532,7 +535,8 @@ def publish_relationships(
             writer.writerow([str(pp.from_), str(pp.to), str(pp.relationship)])
 
     return output_file.with_prefix(METADATA).as_manifest(
-        size_of(s3, config.s3_bucket, output_file)
+        size_of(s3, config.s3_bucket, output_file),
+        s3_version_id = version_of(s3, config.s3_bucket, output_file)
     )
 
 
@@ -541,6 +545,9 @@ def size_of(s3, bucket, key) -> int:
         "ContentLength"
     ]
 
+def version_of(s3, bucket, key) -> Optional[str]:
+    response = s3.head_object(Bucket=bucket, Key=str(key), RequestPayer="requester")
+    return response.get("VersionId")
 
 @contextmanager
 def s3_csv_writer(s3, bucket, key, headers):
