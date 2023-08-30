@@ -50,8 +50,8 @@ class OutputFile:
     def __str__(self) -> str:
         return self.full_path
 
-    def as_manifest(self, size) -> "FileManifest":
-        return FileManifest(path=self.full_path, size=size, file_type=self.file_type)
+    def as_manifest(self, size, s3_version_id = None) -> "FileManifest":
+        return FileManifest(path=self.full_path, size=size, file_type=self.file_type, s3VersionId=s3_version_id)
 
     def with_prefix(self, key_prefix) -> "OutputFile":
         return replace(self, key_prefix=key_prefix)
@@ -294,6 +294,7 @@ class FileManifest(Serializable):
     file_type: str
     id: Optional[UUID] = field(default=None)
     source_package_id: Optional[str] = field(default=None)
+    s3VersionId: Optional[str] = field(default=None)
 
 
 # =============================================================================
