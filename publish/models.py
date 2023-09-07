@@ -276,6 +276,7 @@ class FileManifestSchema(CamelCaseSchema):
     file_type = fields.String()
     id = fields.UUID(allow_none=True)
     source_package_id = fields.String(allow_none=True)
+    s3VersionId = fields.String(allow_none=True)
 
     @post_load
     def make(self, data, **kwargs):
