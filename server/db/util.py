@@ -105,7 +105,7 @@ def map_traversal_nodes_to_variables(*relationships: neo4j.graph.Relationship, s
 
 
 def match_relationship_clause(
-    variables: Dict[str, str], *paths: neo4j.Path, use_types=False
+    variables: Dict[str, str], *paths: neo4j.graph.Path, use_types=False
 ) -> List[str]:
     """
     Generates a CQL MATCH clause for query based on the given path:
