@@ -147,7 +147,7 @@ class SearchDatabase(Transactional):
             cql,
             reserved_relationship_types=labels.RESERVED_SCHEMA_RELATIONSHIPS,
             **kwargs,
-        ).records()
+        ).data()
 
         return (
             (
@@ -617,7 +617,7 @@ class SearchDatabase(Transactional):
 
         result = tx.run(cql, **kwargs)
 
-        for node in result.records():
+        for node in result.data():
             yield (
                 (
                     Record.from_node(
@@ -774,7 +774,7 @@ class SearchDatabase(Transactional):
                     ),
                     dataset=Dataset.from_node(node["dataset"]),
                 )
-                for node in result.records()
+                for node in result.data()
             ),
             head["total_count"],
         )
@@ -858,7 +858,7 @@ class SearchDatabase(Transactional):
                     ),
                     dataset=Dataset.from_node(node["dataset"]),
                 )
-                for node in result.records()
+                for node in result.data()
             ),
             head["total_count"],
         )
@@ -908,7 +908,7 @@ class SearchDatabase(Transactional):
         log.debug(cql)
         log.debug(kwargs)
 
-        results = tx.run(cql, kwargs).records()
+        results = tx.run(cql, kwargs).data()
 
         return [Dataset.from_node(node["dataset"]) for node in results]
 

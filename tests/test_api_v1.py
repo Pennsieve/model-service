@@ -1110,7 +1110,7 @@ def test_concept_instance_dont_sort_many_records(
             WHERE r.`@id` IN {[str(record["id"]) for record in records]}
             RETURN r.`@id` AS id
             """
-        ).records()
+        ).data()
         record_ids = [node["id"] for node in nodes]
         r = partitioned_db.get_all_records_offset_tx(
             tx, model=model, order_by=None, max_records=MAX_RECORDS
