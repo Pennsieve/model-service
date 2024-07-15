@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 from typing import Any, TypeVar, cast
 
 import neotime  # type: ignore
+import neo4j 
 from dateutil import parser as iso8601  # type: ignore
 
 T = TypeVar("T")
@@ -24,7 +25,7 @@ def to_utc(dt):
     """
 
     if isinstance(dt, neo4j.time.DateTime):
-        # Convert neo4j.time.DateTime to datetime.datetime
+        # Convert neo4j.time.DateTime to datetime
         dt = datetime(
             dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second, dt.nanosecond // 1000,
             tzinfo=timezone.utc
