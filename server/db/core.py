@@ -3759,7 +3759,10 @@ class PartitionedDatabase(Transactional):
                n.id    AS to
         """
 
-        relationships = tx.run(cql, **kwargs).data()
+        relationships = tx.run(cql, **kwargs)
+        print("TEST OUTPUT DDD")
+        print(relationships)
+        print(relationships.data())
 
         return [
             ModelRelationship(
