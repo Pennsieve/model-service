@@ -265,7 +265,7 @@ class SearchDatabase(Transactional):
         ORDER BY p.index
         """
 
-        results = tx.run(cql, **kwargs)
+        results = tx.run(cql, **kwargs).data()
 
         return (
             (
