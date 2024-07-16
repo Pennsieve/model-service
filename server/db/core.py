@@ -4175,6 +4175,8 @@ class PartitionedDatabase(Transactional):
             """
 
         relationship = tx.run(cql, **kwargs).single()
+        print("RELATIONSHIP")
+        print(relationship)
 
         if not relationship:
             raise OperationError(
