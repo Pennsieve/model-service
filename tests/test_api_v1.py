@@ -1790,17 +1790,25 @@ def test_get_concept_instance_relationship(
 ):
     _, user_node_id = valid_user
 
+    print("DDD TEST OUTPUT - test_get_concept_instance_relationship")
     # concepts
     patient = create_concept(
         name="patient", display_name="Patient", description="A patient"
     )
+    print(patient)
+
     doctor = create_concept(
         name="doctor", display_name="Doctor", description="A doctor"
     )
+    print(doctor)
+
     visit = create_concept(name="visit", display_name="Visit", description="A visit")
+    print(visit)
 
     # relationships
+    print("MAKE RELATIONSHIP")
     sees = create_concept_relationship("sees", "Sees", patient["id"], doctor["id"])
+    print(sees)
     attends = create_concept_relationship(  # noqa: F841
         "attends", "Attends", doctor["id"], visit["id"]
     )
