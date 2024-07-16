@@ -4362,6 +4362,9 @@ class PartitionedDatabase(Transactional):
                     else:
                         # [2] Otherwise, try and create the model relationship from a relationship stub
                         try:
+                            print("DEBUG -- create_legacy_record_relationship_batch_tx")
+                            print(memo_stub)
+                            print(relation)
                             stub = memo_stub[relation]
                         except KeyError:
                             stub = self.get_model_relationship_stub_tx(
