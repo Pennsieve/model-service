@@ -4173,6 +4173,18 @@ class PartitionedDatabase(Transactional):
             WHERE r.id = $id_or_name OR r.name = $id_or_name
             RETURN r
             """
+        
+        print("CQL")
+        print(cql)
+        print(labels.model_relationship_stub("r"))
+        print(labels.in_dataset())
+        print(labels.dataset("d"))
+        print(kwargs["dataset_id"])
+        print(labels.in_organization())
+        print(labels.in_organization("o"))
+        print(kwargs["organization_id"])
+        print(kwargs["id_or_name"])
+        
 
         relationship = tx.run(cql, **kwargs).single()
         print("RELATIONSHIP")
