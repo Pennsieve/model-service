@@ -47,7 +47,7 @@ class DatabaseMetrics:
             cql,
             organization_id=self._db.organization_id,
             dataset_id=self._db.dataset_id,
-        ).records()
+        ).data()
 
         return [ModelSummary(name=node["name"], count=node["count"]) for node in nodes]
 
@@ -83,7 +83,7 @@ class DatabaseMetrics:
             cql,
             organization_id=self._db.organization_id,
             dataset_id=self._db.dataset_id,
-        ).records()
+        ).data()
 
         return [
             RelationshipSummary(
@@ -175,7 +175,7 @@ class DatabaseMetrics:
                        created.at      AS created_at,
                        updated.at      AS updated_at
                 """
-                nodes = tx.run(cql, **kwargs).records()
+                nodes = tx.run(cql, **kwargs).data()
 
                 return [ModelTopology(**node) for node in nodes]
 
@@ -230,7 +230,7 @@ class DatabaseMetrics:
                 record_id=str(record_id),
                 reserved_relationship_types=labels.RESERVED_SCHEMA_RELATIONSHIPS,
                 include_incoming_linked_properties=include_incoming_linked_properties,
-            ).records()
+            ).data()
 
             package_count = self._db.count_package_proxies_for_record_tx(tx, record)
 

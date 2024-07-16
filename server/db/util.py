@@ -81,9 +81,7 @@ def displayable(s: str) -> str:
     return re.sub(r"[\W_]+", " ", s).capitalize()
 
 
-def map_traversal_nodes_to_variables(
-    *relationships: neo4j.Relationship, start: int = 0
-) -> Dict[ModelId, str]:
+def map_traversal_nodes_to_variables(*relationships: neo4j.graph.Relationship, start: int = 0) -> Dict[ModelId, str]:
     """
     Given a traversal path composed of a series of relationships, generate a
     Cypher variable for each node in the traversal, returning a map from model
@@ -107,7 +105,7 @@ def map_traversal_nodes_to_variables(
 
 
 def match_relationship_clause(
-    variables: Dict[str, str], *paths: neo4j.Path, use_types=False
+    variables: Dict[str, str], *paths: neo4j.graph.Path, use_types=False
 ) -> List[str]:
     """
     Generates a CQL MATCH clause for query based on the given path:
