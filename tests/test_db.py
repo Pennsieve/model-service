@@ -76,7 +76,7 @@ def get_orphaned_nodes(db):
             AND NOT EXISTS((x)-[*6]-({labels.organization()}))
             RETURN x
             """
-        ).records()
+        ).data()
     )
 
 
@@ -216,7 +216,7 @@ def get_all_test_records(
         RETURN r
         """
 
-    nodes = partitioned_db.execute_single(cql, **kwargs).records()
+    nodes = partitioned_db.execute_single(cql, **kwargs).data()
 
     if nodes is None:
         raise ModelNotFoundError(model_id_or_name)
@@ -1442,7 +1442,7 @@ def get_related_to_model_relationship(db, from_, to):
             """,
             from_id=from_.id,
             to_id=to.id,
-        ).records()
+        ).data()
     ]
 
 

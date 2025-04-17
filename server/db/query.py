@@ -265,7 +265,7 @@ class QueryRunner:
                 dataset_id=self._db.dataset_id,
             )
             paths = [
-                r["p"] for r in tx.run(shortest_paths_cql, **path_kwargs).records()
+                r["p"] for r in tx.run(shortest_paths_cql, **path_kwargs).data()
             ]
 
             relationships = list(chain.from_iterable(p.relationships for p in paths))
@@ -403,7 +403,7 @@ class QueryRunner:
 
         # Handle results
         # ---------------------------------------------------------------------
-        nodes = tx.run(cql, **kwargs).records()
+        nodes = tx.run(cql, **kwargs).data()
 
         # TODO: consider turning this function into a generator/use yield
         # instead of building up a `List[Record]` / `Dict[str, List[Record]]`.

@@ -324,7 +324,7 @@ class Database(Transactional):
               -[{labels.in_organization()}]->({labels.organization("o")} {{ id: $organization_id }})
         RETURN DISTINCT d.id AS id
         """
-        result = self.execute(cql, organization_id=organization_id).records()
+        result = self.execute(cql, organization_id=organization_id).data()
 
         return {DatasetId(node["id"]) for node in result}
 
@@ -848,7 +848,7 @@ class PartitionedDatabase(Transactional):
         """
         nodes = tx.run(
             cql, organization_id=self.organization_id, dataset_id=self.dataset_id
-        ).records()
+        ).data()
 
         return [
             cast(
@@ -1058,7 +1058,7 @@ class PartitionedDatabase(Transactional):
 
         collected: List[Tuple[ModelProperty, bool]] = []
 
-        nodes = tx.run(cql, **kwargs).records()
+        nodes = tx.run(cql, **kwargs).data()
 
         if nodes is None:
             raise OperationError(
@@ -1160,7 +1160,7 @@ class PartitionedDatabase(Transactional):
         ORDER BY p.index
         """
 
-        nodes = tx.run(cql, **kwargs).records()
+        nodes = tx.run(cql, **kwargs).data()
 
         return [
             cast(
@@ -1207,7 +1207,7 @@ class PartitionedDatabase(Transactional):
             organization_id=self.organization_id,
             dataset_id=self.dataset_id,
             model_ids=model_ids,
-        ).records()
+        ).data()
 
         return {node["model_id"]: node["property_count"] for node in nodes}
 
@@ -1743,7 +1743,7 @@ class PartitionedDatabase(Transactional):
                created.at AS created_at,
                updated.at AS updated_at
         """
-        nodes = tx.run(cql, **kwargs).records()
+        nodes = tx.run(cql, **kwargs).data()
 
         return [
             Record.from_node(
@@ -2217,7 +2217,7 @@ class PartitionedDatabase(Transactional):
                    []                 AS neighbors
             """
 
-        nodes = tx.run(cql, **kwargs).records()
+        nodes = tx.run(cql, **kwargs).data()
 
         if nodes is None:
             raise ModelNotFoundError(model_id_or_name)
@@ -2351,7 +2351,7 @@ class PartitionedDatabase(Transactional):
                    []                 AS neighbors
             """
 
-        nodes = tx.run(cql, **kwargs).records()
+        nodes = tx.run(cql, **kwargs).data()
 
         properties: List[ModelProperty] = self.get_properties_tx(tx, model.id)
         property_map: Dict[str, ModelProperty] = {p.name: p for p in properties}
@@ -3019,7 +3019,7 @@ class PartitionedDatabase(Transactional):
             organization_id=self.organization_id,
             dataset_id=self.dataset_id,
             relationship_ids=relationship_ids,
-        ).records()
+        ).data()
 
         return [rel["id"] for rel in deleted]
 
@@ -3257,7 +3257,7 @@ class PartitionedDatabase(Transactional):
                 record_id=str(record_id),
                 limit=limit,
                 offset=offset,
-            ).records()
+            ).data()
 
         return (
             total_count,
@@ -3548,7 +3548,7 @@ class PartitionedDatabase(Transactional):
         DELETE proxy_relationship
         RETURN id
         """
-        nodes = tx.run(cql, **kwargs).records()
+        nodes = tx.run(cql, **kwargs).data()
         result_node_ids = set([str(node["id"]) for node in nodes])
 
         for pp_id in package_proxy_ids:
@@ -3577,7 +3577,7 @@ class PartitionedDatabase(Transactional):
             organization_id=self.organization_id,
             dataset_id=self.dataset_id,
             package_id=package_id,
-        ).records()
+        ).data()
 
         return [
             ProxyRelationshipCount(
@@ -3759,7 +3759,10 @@ class PartitionedDatabase(Transactional):
                n.id    AS to
         """
 
-        relationships = tx.run(cql, **kwargs).records()
+        relationships = tx.run(cql, **kwargs)
+        print("TEST OUTPUT DDD")
+        print(relationships)
+        print(relationships.data())
 
         return [
             ModelRelationship(
@@ -3816,7 +3819,7 @@ class PartitionedDatabase(Transactional):
         """
         start_from_model: Model = self.get_model_tx(tx, start_from)
 
-        nodes = tx.run(cql, **kwargs).records()
+        nodes = tx.run(cql, **kwargs).data()
 
         related: List[Model] = [
             cast(
@@ -3984,7 +3987,7 @@ class PartitionedDatabase(Transactional):
         LIMIT toInteger($limit)
         """
 
-        nodes = tx.run(cql, **kwargs).records()
+        nodes = tx.run(cql, **kwargs).data()
 
         for node in nodes:
             rr = RecordRelationship(
@@ -4170,8 +4173,22 @@ class PartitionedDatabase(Transactional):
             WHERE r.id = $id_or_name OR r.name = $id_or_name
             RETURN r
             """
+        
+        print("CQL")
+        print(cql)
+        print(labels.model_relationship_stub("r"))
+        print(labels.in_dataset())
+        print(labels.dataset("d"))
+        print(kwargs["dataset_id"])
+        print(labels.in_organization())
+        print(labels.in_organization("o"))
+        print(kwargs["organization_id"])
+        print(kwargs["id_or_name"])
+        
 
         relationship = tx.run(cql, **kwargs).single()
+        print("RELATIONSHIP")
+        print(relationship)
 
         if not relationship:
             raise OperationError(
@@ -4228,7 +4245,7 @@ class PartitionedDatabase(Transactional):
         RETURN r
         """
 
-        relationships = tx.run(cql, **kwargs).records()
+        relationships = tx.run(cql, **kwargs).data()
 
         return (
             cast(ModelRelationshipStub, ModelRelationshipStub.from_node(**nodes["r"]))
@@ -4359,6 +4376,9 @@ class PartitionedDatabase(Transactional):
                     else:
                         # [2] Otherwise, try and create the model relationship from a relationship stub
                         try:
+                            print("DEBUG -- create_legacy_record_relationship_batch_tx")
+                            print(memo_stub)
+                            print(relation)
                             stub = memo_stub[relation]
                         except KeyError:
                             stub = self.get_model_relationship_stub_tx(
