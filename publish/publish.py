@@ -463,8 +463,8 @@ def publish_package_proxy_files(
     )
 
 def package_proxy_relationships(
-  package_proxies: Iterator[Tuple[PackageProxy, Record]],
-  file_manifests: List[FileManifest],
+    package_proxies: Iterator[Tuple[PackageProxy, Record]],
+    file_manifests: List[FileManifest],
 ) -> Iterator[PackageProxyRelationship]:
     """
     Yield all proxy package relationships in the dataset
@@ -473,16 +473,16 @@ def package_proxy_relationships(
     longer exists in the dataset, ignore it.
     """
     files_by_package_id: Dict[str, List[FileManifest]] = defaultdict(list)
-    for file_manifest in file_manifests:
-        if file_manifest.source_package_id:
-            files_by_package_id[file_manifest.source_package_id].append(file_manifest)
+    for f in file_manifests:
+        if f.source_package_id:
+            files_by_package_id[f.source_package_id].append(f)
 
     for pp, record in package_proxies:
         for file_manifest in files_by_package_id.get(pp.package_node_id, []):
             assert file_manifest.id is not None
 
             yield PackageProxyRelationship(
-                from_=record.id, to=file_manifest.id, relationship=pp.relationship_type,
+                from_=record.id, to=file_manifest.id, relationship=pp.relationship_type
             )
 
 def publish_relationships(
