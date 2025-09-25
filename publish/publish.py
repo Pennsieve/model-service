@@ -472,8 +472,8 @@ def package_proxies_and_relationships(
       - Proxy package relationships, expanded across a package's source files,
         only when the package exists in the dataset -- used by discover-publish
     """
-    source = db.get_all_package_proxies_tx(tx)
-    record_packages, relationships = tee(source)
+    all_package_proxies = db.get_all_package_proxies_tx(tx)
+    for_record_packages, for_relationships = tee(all_package_proxies)
 
     def package_proxy_relationships() -> Iterator[PackageProxyRelationship]:
         files_by_package_id: Dict[str, List[FileManifest]] = defaultdict(list)
@@ -481,16 +481,16 @@ def package_proxies_and_relationships(
             if file_manifest.source_package_id:
                 files_by_package_id[file_manifest.source_package_id].append(file_manifest)
 
-        for package_proxy, record in relationship_source:
-            for file_manifest in files_by_package_id.get(package_proxy.package_node_id, []):
+        for pp, record in for_relationships:
+            for file_manifest in files_by_package_id.get(pp.package_node_id, []):
                 assert file_manifest.id is not None
                 yield PackageProxyRelationship(
                     from_=record.id,
                     to=file_manifest.id,
-                    relationship=package_proxy.relationship_type,
+                    relationship=pp.relationship_type,
                 )
 
-    return record_packages, package_proxy_relationships()
+    return for_record_packages, package_proxy_relationships()
 
 def publish_relationships(
     db: PartitionedDatabase,
