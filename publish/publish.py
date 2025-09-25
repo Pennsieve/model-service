@@ -78,12 +78,13 @@ def publish_dataset(
 
         # 0) Get all existing proxy relationships. We'll need these in a few places.
         # ======================================================================
-        record_packages, package_proxies = package_proxies_and_relationships(db, tx, file_manifests)
+        all_package_proxies = db.get_all_package_proxies_tx(tx)
+        record_packages, package_proxies = tee(all_package_proxies)
 
         proxies_by_relationship: Dict[
             RelationshipName, List[PackageProxyRelationship]
         ] = defaultdict(list)
-        for pp in package_proxies:
+        for pp in package_proxy_relationships(package_proxies, file_manifests):
             proxies_by_relationship[pp.relationship].append(pp)
 
         # 1) Publish graph schema
@@ -461,36 +462,28 @@ def publish_package_proxy_files(
         s3_version_id = version_of(s3, config.s3_bucket, file_output_file)
     )
 
-def package_proxies_and_relationships(
-    db: PartitionedDatabase,
-    tx: Transaction,
-    file_manifests: List[FileManifest]
-) -> Tuple[Iterator[Tuple[PackageProxy, Record]], Iterator[PackageProxyRelationship]]:
+def package_proxy_relationships(
+  package_proxies: Iterator[Tuple[PackageProxy, Record]],
+  file_manifests: List[FileManifest],
+) -> Iterator[PackageProxyRelationship]:
     """
-    Yields two iterators:
-      - All proxy packages and records in the graph -- used by the metadata migration
-      - Proxy package relationships, expanded across a package's source files,
-        only when the package exists in the dataset -- used by discover-publish
+    Yield all proxy package relationships in the dataset
+
+    Explodes each proxy package into multiple source files.  If the package no
+    longer exists in the dataset, ignore it.
     """
-    all_package_proxies = db.get_all_package_proxies_tx(tx)
-    for_record_packages, for_relationships = tee(all_package_proxies)
+    files_by_package_id: Dict[str, List[FileManifest]] = defaultdict(list)
+    for file_manifest in file_manifests:
+        if file_manifest.source_package_id:
+            files_by_package_id[file_manifest.source_package_id].append(file_manifest)
 
-    def package_proxy_relationships() -> Iterator[PackageProxyRelationship]:
-        files_by_package_id: Dict[str, List[FileManifest]] = defaultdict(list)
-        for file_manifest in file_manifests:
-            if file_manifest.source_package_id:
-                files_by_package_id[file_manifest.source_package_id].append(file_manifest)
+    for pp, record in package_proxies:
+        for file_manifest in files_by_package_id.get(pp.package_node_id, []):
+            assert file_manifest.id is not None
 
-        for pp, record in for_relationships:
-            for file_manifest in files_by_package_id.get(pp.package_node_id, []):
-                assert file_manifest.id is not None
-                yield PackageProxyRelationship(
-                    from_=record.id,
-                    to=file_manifest.id,
-                    relationship=pp.relationship_type,
-                )
-
-    return for_record_packages, package_proxy_relationships()
+            yield PackageProxyRelationship(
+                from_=record.id, to=file_manifest.id, relationship=pp.relationship_type,
+            )
 
 def publish_relationships(
     db: PartitionedDatabase,
