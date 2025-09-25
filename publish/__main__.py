@@ -101,7 +101,12 @@ parser.add_argument(
     help="AWS S3 target bucket, either for embargoed or published datasets",
     action=env_action("S3_BUCKET"),
 )
-
+parser.add_argument(
+    "--metadata-migration",
+    action="store_true",
+    default=("METADATA_MIGRATION" in environ),
+    help="publish specific for metadata migration",
+)
 
 if __name__ == "__main__":
     configure_logging("INFO")
@@ -117,9 +122,12 @@ if __name__ == "__main__":
 
     s3 = boto3.client("s3", region_name="us-east-1")
 
-    config = PublishConfig(s3_publish_key=args.s3_publish_key, s3_bucket=args.s3_bucket)
+    config = PublishConfig(s3_publish_key=args.s3_publish_key, s3_bucket=args.s3_bucket, metadata_migration=args.metadata_migration)
 
-    file_manifests = read_file_manifests(s3, config)
+    # only fetch manifest files for publish
+    file_manifests = []
+    if !config.metadata_migration:
+        file_manifests = read_file_manifests(s3, config)
 
     graph_manifests = publish_dataset(db, s3, config, file_manifests=file_manifests)
 
