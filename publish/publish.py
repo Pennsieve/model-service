@@ -153,13 +153,13 @@ def read_file_manifests(s3, config: PublishConfig) -> List[FileManifest]:
     """
     log.info("Reading source file manifests")
 
-        body = s3.get_object(
-            Bucket=config.s3_bucket,
-            Key=str(PUBLISH_ASSETS_FILE.with_prefix(config.s3_publish_key)),
-            RequestPayer="requester",
-        )["Body"].read()
+    body = s3.get_object(
+        Bucket=config.s3_bucket,
+        Key=str(PUBLISH_ASSETS_FILE.with_prefix(config.s3_publish_key)),
+        RequestPayer="requester",
+    )["Body"].read()
 
-        return FileManifest.schema().load(json.loads(body)["packageManifests"], many=True)
+    return FileManifest.schema().load(json.loads(body)["packageManifests"], many=True)
 
 
 def write_graph_manifests(
