@@ -472,6 +472,7 @@ def package_proxy_relationships(
     Explodes each proxy package into multiple source files.  If the package no
     longer exists in the dataset, ignore it.
     """
+
     files_by_package_id: Dict[str, List[FileManifest]] = defaultdict(list)
     for f in file_manifests:
         if f.source_package_id:
@@ -484,6 +485,7 @@ def package_proxy_relationships(
             yield PackageProxyRelationship(
                 from_=record.id, to=file_manifest.id, relationship=pp.relationship_type
             )
+
 
 def publish_relationships(
     db: PartitionedDatabase,
@@ -543,7 +545,11 @@ def publish_relationships(
         s3_version_id = version_of(s3, config.s3_bucket, output_file)
     )
 
-def publish_record_packages(config, s3, record_packages: Iterator[Tuple[PackageProxy, Record]]) -> FileManifest:
+def publish_record_packages(
+    config,
+    s3,
+    record_packages: Iterator[Tuple[PackageProxy, Record]],
+) -> FileManifest:
     """
     Export all record package relationships into a CSV
     """
