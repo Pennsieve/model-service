@@ -6,7 +6,7 @@ import sys
 from collections import Sequence, Set, defaultdict
 from contextlib import contextmanager
 from datetime import datetime
-from itertools import chain
+from itertools import chain, tee
 from tempfile import NamedTemporaryFile
 from typing import Dict, Iterator, List, Optional, Set, Tuple, Union, cast
 from uuid import UUID
@@ -54,7 +54,7 @@ PUBLISH_ASSETS_FILE = OutputFile.json("publish")
 
 GRAPH_ASSETS_FILE = OutputFile.json("graph")
 
-DATASET_LOCATION_FILE = OutputFile.json("service")
+RECORD_PACKAGES_FILE = OutputFile.csv_for_model("record_packages")
 
 PROXY_FILE_MODEL_NAME = "file"
 
@@ -78,10 +78,13 @@ def publish_dataset(
 
         # 0) Get all existing proxy relationships. We'll need these in a few places.
         # ======================================================================
+        all_package_proxies = db.get_all_package_proxies_tx(tx)
+        record_packages, package_proxies = tee(all_package_proxies)
+
         proxies_by_relationship: Dict[
             RelationshipName, List[PackageProxyRelationship]
         ] = defaultdict(list)
-        for pp in package_proxy_relationships(db, tx, config, s3, file_manifests):
+        for pp in package_proxy_relationships(package_proxies, file_manifests):
             proxies_by_relationship[pp.relationship].append(pp)
 
         # 1) Publish graph schema
@@ -132,6 +135,13 @@ def publish_dataset(
                     config,
                     s3,
                 )
+            )
+
+        # 5) Publish record packages (metadata migration only)
+        # ======================================================================
+        if config.metadata_migration:
+            graph_manifests.append(
+                publish_record_packages(config, s3, record_packages)
             )
 
     return graph_manifests
@@ -452,12 +462,8 @@ def publish_package_proxy_files(
         s3_version_id = version_of(s3, config.s3_bucket, file_output_file)
     )
 
-
 def package_proxy_relationships(
-    db: PartitionedDatabase,
-    tx: Transaction,
-    config,
-    s3,
+    package_proxies: Iterator[Tuple[PackageProxy, Record]],
     file_manifests: List[FileManifest],
 ) -> Iterator[PackageProxyRelationship]:
     """
@@ -472,7 +478,7 @@ def package_proxy_relationships(
         if f.source_package_id:
             files_by_package_id[f.source_package_id].append(f)
 
-    for pp, record in db.get_all_package_proxies_tx(tx):
+    for pp, record in package_proxies:
         for file_manifest in files_by_package_id.get(pp.package_node_id, []):
             assert file_manifest.id is not None
 
@@ -539,6 +545,38 @@ def publish_relationships(
         s3_version_id = version_of(s3, config.s3_bucket, output_file)
     )
 
+def publish_record_packages(
+    config,
+    s3,
+    record_packages: Iterator[Tuple[PackageProxy, Record]],
+) -> FileManifest:
+    """
+    Export all record package relationships into a CSV
+    """
+    log.info(f"Writing record package relationships")
+
+    output_file = RECORD_PACKAGES_FILE.with_prefix(
+        os.path.join(config.s3_publish_key, METADATA)
+    )
+
+    with s3_csv_writer(
+        s3,
+        config.s3_bucket,
+        str(output_file),
+        ["record_id", "package_id", "package_node_id", "relationship_type"]
+    ) as writer:
+        for record, pp in record_packages:
+            writer.writerow([
+                str(record.id),
+                str(pp.package_id),
+                str(pp.package_node_id),
+                str(pp.relationship_type)
+            ])
+
+    return output_file.with_prefix(METADATA).as_manifest(
+        size_of(s3, config.s3_bucket, output_file),
+        s3_version_id = version_of(s3, config.s3_bucket, output_file)
+    )
 
 def size_of(s3, bucket, key) -> int:
     return s3.head_object(Bucket=bucket, Key=str(key), RequestPayer="requester")[

@@ -58,7 +58,7 @@ def s3(aws_credentials):
 
 @pytest.fixture(scope="session")
 def config():
-    return PublishConfig("test-embargo-bucket", "10/233")
+    return PublishConfig("test-embargo-bucket", "10/233", False)
 
 
 @pytest.fixture(scope="function")
@@ -879,7 +879,7 @@ def test_publish_linked_properties_with_no_index(
 
 
 def test_read_file_manifests(s3):
-    config = PublishConfig("test-publish-bucket", "10/233")
+    config = PublishConfig("test-publish-bucket", "10/233", False)
     s3.create_bucket(Bucket=config.s3_bucket)
 
     # This would be created by `discover-publish`
@@ -927,7 +927,7 @@ def test_read_file_manifests(s3):
 
 
 def test_write_graph_manifests(s3):
-    config = PublishConfig("test-publish-bucket", "10/233")
+    config = PublishConfig("test-publish-bucket", "10/233", False)
     s3.create_bucket(Bucket=config.s3_bucket)
 
     graph_manifests = [
