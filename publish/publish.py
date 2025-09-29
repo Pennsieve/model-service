@@ -573,7 +573,7 @@ def publish_record_packages(
         str(output_file),
         ["record_id", "package_id", "package_node_id", "relationship_type"]
     ) as writer:
-        for record, pp in record_packages:
+        for pp, record in record_packages:
             writer.writerow([
                 str(record.id),
                 str(pp.package_id),
