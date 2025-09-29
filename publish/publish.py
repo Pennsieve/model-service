@@ -216,6 +216,8 @@ def publish_schema(
                 display_name=p.display_name,
                 description=p.description,
                 data_type=p.data_type,
+                required=p.required,
+                model_title=p.model_title,
             )
             for p in properties
         ] + [
