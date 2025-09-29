@@ -126,7 +126,7 @@ if __name__ == "__main__":
 
     # only fetch manifest files for publish
     file_manifests = []
-    if !config.metadata_migration:
+    if not config.metadata_migration:
         file_manifests = read_file_manifests(s3, config)
 
     graph_manifests = publish_dataset(db, s3, config, file_manifests=file_manifests)
