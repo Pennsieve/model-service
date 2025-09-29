@@ -316,7 +316,7 @@ def record_headers(
     )
 
 
-def format_value(v) -> str:
+def format_value(v, arrays_as_json: bool = False) -> str:
     """
     Format a record value to export in a CSV
 
@@ -333,16 +333,20 @@ def format_value(v) -> str:
         return "false"
     elif isinstance(v, str):
         return v
-    elif isinstance(v, (Sequence, Set)):
-        return ";".join(format_value(w).replace(";", "_") for w in v)
+    elif isinstance(v, (Sequence, Set)) and not isinstance(v, (str, bytes)):
+        formatted = [format_value(x, arrays_as_json) for x in v]
+        if arrays_as_json:
+            return json.dumps(formatted)
+        else:
+            return ";".join(w.replace(";", "_") for w in formatted)
     elif isinstance(v, datetime):
         return v.isoformat()
     elif isinstance(v, neotime.DateTime):
         return v.to_native().isoformat()
     return str(v)
 
-
 def record_row(
+    config: PublishConfig,
     r: Record,
     properties: List[ModelProperty],
     linked_properties: List[ModelRelationship],
@@ -361,7 +365,7 @@ def record_row(
     # properties supplied in the model property list:
     for p in properties:
         assert p.name in r.values, f"Missing property {p.name} from record {r.id}"
-        row.append(format_value(r.values[p.name]))
+        row.append(format_value(r.values[p.name], arrays_as_json=config.metadata_migration))
 
     for lp in linked_properties:
         linked_record = cast(RecordStub, r.values.get(lp.name))
@@ -373,7 +377,11 @@ def record_row(
 
 
 def publish_records_of_model(
-    db: PartitionedDatabase, tx: Transaction, model: Model, config, s3
+    db: PartitionedDatabase,
+    tx: Transaction,
+    model: Model,
+    config: PublishConfig,
+    s3,
 ) -> FileManifest:
     """
     Export the records of a specific model.
@@ -402,7 +410,7 @@ def publish_records_of_model(
             fill_missing=True,
             limit=None,
         ):
-            writer.writerow(record_row(r, model_properties, linked_properties))
+            writer.writerow(record_row(config, r, model_properties, linked_properties))
 
     return output_file.with_prefix(METADATA).as_manifest(
         size_of(s3, config.s3_bucket, output_file),
