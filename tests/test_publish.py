@@ -217,7 +217,7 @@ def test_publish(
                     "description": "The path to the file from the root of the dataset",
                     "dataType": {"type": "String"},
                     "required": False,
-                    "modelTitle": True,
+                    "modelTitle": False,
                 }
                 # TODO: add sourcePackageId (enhancement)
             ],
@@ -840,7 +840,7 @@ def test_publish_linked_properties_with_no_index(
             "displayName": "name",
             "description": "",
             "dataType": {"type": "String"},
-            "required": False,
+            "required": True,
             "modelTitle": True,
         },
         {
