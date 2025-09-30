@@ -269,8 +269,6 @@ def test_publish(
                         "to": "patient",
                         "file": "records/patient.csv",
                     },
-                    "required": False,
-                    "modelTitle": False,
                 },
             ],
         },
@@ -848,16 +846,12 @@ def test_publish_linked_properties_with_no_index(
             "displayName": "interacts",
             "description": "",
             "dataType": {"type": "Model", "to": "gene", "file": "records/gene.csv"},
-            "required": False,
-            "modelTitle": False,
         },
         {
             "name": "regulates",
             "displayName": "regulates",
             "description": "",
             "dataType": {"type": "Model", "to": "gene", "file": "records/gene.csv"},
-            "required": False,
-            "modelTitle": False,
         },
     ]
 
