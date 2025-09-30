@@ -200,6 +200,8 @@ def test_publish(
                     "displayName": "Name",
                     "description": "",
                     "dataType": {"type": "String"},
+                    "required": False,
+                    "modelTitle": True,
                 }
             ],
         },
@@ -214,6 +216,8 @@ def test_publish(
                     "displayName": "Path",
                     "description": "The path to the file from the root of the dataset",
                     "dataType": {"type": "String"},
+                    "required": False,
+                    "modelTitle": False,
                 }
                 # TODO: add sourcePackageId (enhancement)
             ],
@@ -229,6 +233,8 @@ def test_publish(
                     "displayName": "Name",
                     "description": "",
                     "dataType": {"type": "String"},
+                    "required": False,
+                    "modelTitle": True,
                 }
             ],
         },
@@ -243,12 +249,16 @@ def test_publish(
                     "displayName": "Name",
                     "description": "",
                     "dataType": {"type": "String"},
+                    "required": False,
+                    "modelTitle": True,
                 },
                 {
                     "name": "age",
                     "displayName": "Age",
                     "description": "",
                     "dataType": {"type": "Long"},
+                    "required": False,
+                    "modelTitle": False,
                 },
                 {
                     "name": "best_friend",
@@ -273,6 +283,8 @@ def test_publish(
                     "displayName": "Day",
                     "description": "",
                     "dataType": {"type": "String"},
+                    "required": False,
+                    "modelTitle": True,
                 }
             ],
         },
@@ -826,6 +838,8 @@ def test_publish_linked_properties_with_no_index(
             "displayName": "name",
             "description": "",
             "dataType": {"type": "String"},
+            "required": True,
+            "modelTitle": True,
         },
         {
             "name": "interacts",

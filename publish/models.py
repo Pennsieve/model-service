@@ -98,6 +98,9 @@ class ExportModelPropertySchema(CamelCaseSchema):
         serialize=lambda o: o.data_type.to_dict(),
         deserialize=dt.deserialize,
     )
+    default_value = fields.Raw()
+    required = fields.Boolean()
+    model_title = fields.Boolean()
 
 
 @dataclass(frozen=True)
@@ -111,6 +114,9 @@ class ExportModelProperty(ExportProperty):
     display_name: str
     description: str
     data_type: dt.DataType
+    default_value: Optional[t.GraphValue] = field(default=None)
+    required: bool = False
+    model_title: bool = False
 
 
 class LinkedModelDataTypeSchema(CamelCaseSchema):
