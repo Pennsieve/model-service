@@ -383,8 +383,6 @@ def record_row(
         if linked_record:
             row.append(str(linked_record.id))
             row.append(linked_record.title or "")
-        else:
-            row += ["", ""]
 
     return row
 
