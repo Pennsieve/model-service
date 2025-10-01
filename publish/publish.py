@@ -318,6 +318,15 @@ def record_headers(
         )
     )
 
+def _json_value(x):
+    if x is None or isinstance(x, (str, int, float, bool)):
+        return x
+    if isinstance(x, (datetime, neotime.DateTime)):
+        native = x.to_native() if isinstance(x, neotime.DateTime) else x
+        return native.isoformat()
+    if isinstance(x, (Sequence, Set)) and not isinstance(x, (str, bytes)):
+        return [_json_value(e) for e in x]
+    return str(x)
 
 def format_value(v, arrays_as_json: bool = False) -> str:
     """
@@ -337,11 +346,10 @@ def format_value(v, arrays_as_json: bool = False) -> str:
     elif isinstance(v, str):
         return v
     elif isinstance(v, (Sequence, Set)) and not isinstance(v, (str, bytes)):
-        formatted = [format_value(x, arrays_as_json) for x in v]
         if arrays_as_json:
-            return json.dumps(formatted)
+            return json.dumps([_json_value(e) for e in v], ensure_ascii=False)
         else:
-            return ";".join(w.replace(";", "_") for w in formatted)
+            return ";".join(format_value(w).replace(";", "_") for w in v)
     elif isinstance(v, datetime):
         return v.isoformat()
     elif isinstance(v, neotime.DateTime):
@@ -375,6 +383,8 @@ def record_row(
         if linked_record:
             row.append(str(linked_record.id))
             row.append(linked_record.title or "")
+        else:
+            row += ["", ""]
 
     return row
 
