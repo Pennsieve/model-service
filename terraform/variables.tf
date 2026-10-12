@@ -21,8 +21,3 @@ variable "neo4j_max_connection_lifetime" {
 variable "log_level" {
   default = "INFO"
 }
-
-locals {
-  service = element(split("-", var.service_name), 0)
-  tier    = element(split("-", var.service_name), 1)
-}
